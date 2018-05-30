@@ -77,5 +77,6 @@ for w in wordsFiltered:
     if text_has_emoji(w):
         print(emoji.demojize(w))
         print(w.encode(encoding='utf-8'))
+        #print(w.decode('unicode-escape').encode('latin1').decode('utf8'))
         
         
