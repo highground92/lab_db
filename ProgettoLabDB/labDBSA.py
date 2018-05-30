@@ -4,13 +4,13 @@ from nltk.tokenize import sent_tokenize, word_tokenize
 from nltk.corpus import stopwords
 from nltk.tokenize import TweetTokenizer
 import os
-import emoji
+import emoji_list
  
 #Leggo il dataSet e lo metto come stringa
 with open(os.path.abspath("dataSet/dataset_joy_piccolo.txt"), 'r') as myfile:
     data=myfile.read().replace('\n', '') 
 
-#Levo le stopWords, TODO mettere le stopWords della prof
+#Levo le stopWords, TODO mettere le stopWords della prof, spostare questo piú avanti
 stopWords = set(stopwords.words('english'))
 words = TweetTokenizer().tokenize(data)
 wordsFiltered = [] #File filtrato
@@ -20,54 +20,31 @@ for w in words:
         
 #Levo USERNAME e URL
 deleteWords = ['USERNAME', 'URL']
-for word in list(wordsFiltered):  
-    if word in deleteWords:
-        wordsFiltered.remove(word)
+wordsFiltered = [h for h in wordsFiltered if h not in deleteWords]
 
 #Processo hashtags.
-hashtags = []
-for h in wordsFiltered:
-    if h.startswith("#"):
-        hashtags.append(h)
-        wordsFiltered.remove(h)
-        h=0
+hashtags=[h for h in wordsFiltered if h.startswith("#")]
+wordsFiltered=[h for h in wordsFiltered if not h.startswith("#")]
+                                                            
+#Emoji.             
+countEmoPos=len([h for h in wordsFiltered if h in set(emoji_list.EmojiPos)])
+wordsFiltered=[h for h in wordsFiltered if h not in set(emoji_list.EmojiPos)]
 
-#Emoji. TODO  capire perché non leva tutto 
-print("EMOJI POS:")
-print(emoji.EmojiPos)
-countEmoPos = 0
-countEmoNeg = 0
-countEmoNeut = 0
-for h in wordsFiltered:
-    for j in emoji.EmojiPos:
-        if h==j:
-            countEmoPos += 1
-            wordsFiltered.remove(h)
-    for k in emoji.EmojiNeg:
-        if h==k:
-            countEmoNeg += 1
-            wordsFiltered.remove(h)
-    for l in emoji.OthersEmoji:
-        if h==l:
-            countEmoNeut += 1
-            wordsFiltered.remove(h)
+countEmoNeg=len([h for h in wordsFiltered if h in set(emoji_list.EmojiNeg)])
+wordsFiltered=[h for h in wordsFiltered if h not in set(emoji_list.EmojiNeg)]
+
+countEmoNeut=len([h for h in wordsFiltered if h in set(emoji_list.OthersEmoji)])
+wordsFiltered=[h for h in wordsFiltered if h not in set(emoji_list.OthersEmoji)]
 
 #Emoticons
-countPosEmoticons = 0
-countNegEmoticons = 0
-for h in wordsFiltered:
-    for j in emoji.posemoticons:
-        if h == j:
-            countPosEmoticons +=1
-            wordsFiltered.remove(h)
-    for k in emoji.negemoticons:
-        if h == k:
-            countNegEmoticons +=1
-            wordsFiltered.remove(h)
+countPosEmoticons=len([h for h in wordsFiltered if h in set(emoji_list.posemoticons)])
+wordsFiltered=[h for h in wordsFiltered if h not in set(emoji_list.posemoticons)]
 
-#print("FACCIA CHE RIDE LINGUA FUORI")
-print(emoji.EmojiPos[20]==wordsFiltered[18])
-#print(wordsFiltered[18])
+countNegEmoticons=len([h for h in wordsFiltered if h in set(emoji_list.negemoticons)])
+wordsFiltered=[h for h in wordsFiltered if h not in set(emoji_list.negemoticons)]
+
+
+
 print("STAMPO VALORI: ")
 print("countEmoPos: "+repr(countEmoPos))
 print("countEmoNeg: "+repr(countEmoNeg))
@@ -79,6 +56,6 @@ print("LISTA HASHTAGS: ")
 print(hashtags)    
     
 #Stampo risultato 
-print("TWEET MODIFICATI: ")    
+print("TWEET PULITI: ")    
 print(wordsFiltered)
 #print(sentenceFiltered)
