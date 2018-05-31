@@ -3,8 +3,8 @@
 from nltk.tokenize import sent_tokenize, word_tokenize
 from nltk.corpus import stopwords
 from nltk.tokenize import TweetTokenizer
+from collections import defaultdict
 import os
-<<<<<<< HEAD
 
 
 # -*- encoding: utf-8 -*-
@@ -22,9 +22,8 @@ def text_has_emoji(text):
         if character in emoji.UNICODE_EMOJI:
             return True
     return False
-=======
+
 import emoji_list
->>>>>>> Stefano
  
 #Leggo il dataSet e lo metto come stringa
 with open(os.path.abspath("dataSet/dataset_joy_piccolo.txt"), 'r', encoding='utf-8') as myfile:
@@ -43,7 +42,6 @@ deleteWords = ['USERNAME', 'URL']
 wordsFiltered = [h for h in wordsFiltered if h not in deleteWords]
 
 #Processo hashtags.
-<<<<<<< HEAD
 hashtags = []
 #Metodo precedente quando ogni elemento era tokenizzato come parola
 """hashSymbol= ['#']
@@ -61,7 +59,6 @@ for h in wordsFiltered:
         hashtags.append(h)
         wordsFiltered.remove(h)
         
-=======
 hashtags=[h for h in wordsFiltered if h.startswith("#")]
 wordsFiltered=[h for h in wordsFiltered if not h.startswith("#")]
                                                             
@@ -81,7 +78,6 @@ wordsFiltered=[h for h in wordsFiltered if h not in set(emoji_list.posemoticons)
 
 countNegEmoticons=len([h for h in wordsFiltered if h in set(emoji_list.negemoticons)])
 wordsFiltered=[h for h in wordsFiltered if h not in set(emoji_list.negemoticons)]
->>>>>>> Stefano
 
 
 
@@ -107,5 +103,27 @@ for w in wordsFiltered:
         print(emoji.demojize(w))
         print(w.encode(encoding='utf-8'))
         #print(w.decode('unicode-escape').encode('latin1').decode('utf8'))
+
+#Prova creazione dizionari annidati
+myDict = defaultdict()
+myDict2 = defaultdict()
+myDict2["prova"] = 2
+myDict['home'] = myDict2
+print(myDict["home"]["prova"])
+  # {'home': {'state': 'MN'}}
+  
+#prova caricamento EmoSN_anger in dictionary
+with open(os.path.abspath("resources/EmoSN_anger.txt"), 'r', encoding='utf-8') as angerFile:
+    dataAnger=angerFile.read()
+wordsAnger = dataAnger.splitlines()
+print(wordsAnger)
+
+angerDict = defaultdict()
+
+for w in wordsAnger:
+    angerDict[w]=w
+
+print('prova di stampa')
+print(angerDict['caste'])
         
         
