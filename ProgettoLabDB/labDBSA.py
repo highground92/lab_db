@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-
+from nltk import pos_tag
 from nltk.stem import PorterStemmer 
 from nltk.tokenize import sent_tokenize, word_tokenize
 from nltk.corpus import stopwords
@@ -8,9 +8,10 @@ import os
 from resources import emoji_list, punctuation_mark, slang_words, pos
 import re 
 import collections
+import emoji
 
 #Leggo il dataSet e lo metto come stringa
-with open(os.path.abspath("dataSet/dataset_joy_piccolo.txt"), 'r') as myfile:
+with open(os.path.abspath("dataSet/dataset_joy_piccolo.txt"), 'r', encoding='utf-8') as myfile:
     data=myfile.read().replace('\n', '') 
 
 #Creazione del file senza stopWords
@@ -39,6 +40,10 @@ wordsFiltered=[h for h in wordsFiltered if h not in set(emoji_list.EmojiNeg)]
 countEmoNeut=len([h for h in wordsFiltered if h in set(emoji_list.OthersEmoji)])
 wordsFiltered=[h for h in wordsFiltered if h not in set(emoji_list.OthersEmoji)]
 
+#ulteriori emo riconosciute tramite libreria emoji
+countEmoOthers=len([h for h in wordsFiltered if h in emoji.UNICODE_EMOJI])
+wordsFiltered=[h for h in wordsFiltered if h not in emoji.UNICODE_EMOJI]
+
 #Emoticons
 countPosEmoticons=len([h for h in wordsFiltered if h in set(emoji_list.posemoticons)])
 wordsFiltered=[h for h in wordsFiltered if h not in set(emoji_list.posemoticons)]
@@ -57,7 +62,8 @@ slangWords=[h for h in wordsFiltered if h in slang_words.slang]
 wordsFiltered=[h for h in wordsFiltered if h not in slang_words.slang]
 
 #POS tagging
-posTagging=[h for h in wordsFiltered if h in pos.tag]
+
+posTagging=pos_tag(wordsFiltered)
 wordsFiltered=[h for h in wordsFiltered if h not in pos.tag]
 
 #Stemming
