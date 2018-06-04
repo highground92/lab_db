@@ -112,18 +112,22 @@ myDict['home'] = myDict2
 print(myDict["home"]["prova"])
   # {'home': {'state': 'MN'}}
   
-#prova caricamento EmoSN_anger in dictionary
-with open(os.path.abspath("resources/EmoSN_anger.txt"), 'r', encoding='utf-8') as angerFile:
-    dataAnger=angerFile.read()
-wordsAnger = dataAnger.splitlines()
-print(wordsAnger)
+#prova caricamento risorse lessicali relative a joy
+with open(os.path.abspath("resources/EmoSN_joy.txt"), 'r', encoding='utf-8') as angerFile:
+    EmoSN_joy=angerFile.read().splitlines()
 
-angerDict = defaultdict()
+EmoSN_joy_dict = defaultdict()
 
-for w in wordsAnger:
-    angerDict[w]=w
+for w in EmoSN_joy:
+    EmoSN_joy_dict[w]=0
+    
+for w in wordsFiltered:
+    if w in EmoSN_joy_dict:
+        EmoSN_joy_dict[w] = EmoSN_joy_dict[w]+1
 
-print('prova di stampa')
-print(angerDict['caste'])
+print('lista parole relative a joy trovate in dataset_joy:')
+for w in EmoSN_joy_dict:
+    if EmoSN_joy_dict[w]>0:
+        print(w + ' : ' + repr(EmoSN_joy_dict[w]))
         
         
