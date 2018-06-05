@@ -23,10 +23,38 @@ def text_has_emoji(text):
             return True
     return False
 
+#Processa le filtered_words secondo le risorse lessicali di tipo joy
+#Ritorna un dictionary(nested) con chiavi word:sentiment:resource
+#Il valore "finale" per ogni resource è 1 se la parola è presente nella corrispettiva risorsa lessicale, 0 altrimenti
+#TODO: generalizzare questo processo per tutte le risorse lessicali
+def process_joy_resources(filtered_words):
+    new_dict = defaultdict()
+    for w in wordsFiltered:
+        sentiment_dict = defaultdict()
+        resources_dict = defaultdict()
+        sentiment_dict['joy'] = resources_dict
+        new_dict[w] = sentiment_dict
+        if w in EmoSN_joy_dict:
+            resources_dict['EmoSN_joy'] =1
+        else:
+            resources_dict['EmoSN_joy'] =0
+        if w in NRC_joy_dict:
+            resources_dict['RNC_joy'] =1
+        else:
+            resources_dict['RNC_joy'] = 0
+        if w in sentisense_joy_dict:
+            resources_dict['sentisense_joy'] =1
+        else:
+            resources_dict['sentisense_joy'] = 0
+        
+        
+        
+    return new_dict
+
 import emoji_list
  
 #Leggo il dataSet e lo metto come stringa
-with open(os.path.abspath("dataSet/dataset_dt_joy_60k.txt"), 'r', encoding='utf-8') as myfile:
+with open(os.path.abspath("dataSet/dataset_joy_piccolo.txt"), 'r', encoding='utf-8') as myfile:
     data=myfile.read().replace('\n', '') 
 
 #Levo le stopWords, TODO mettere le stopWords della prof, spostare questo piú avanti
@@ -103,14 +131,6 @@ for w in wordsFiltered:
         print(emoji.demojize(w))
         print(w.encode(encoding='utf-8'))
         #print(w.decode('unicode-escape').encode('latin1').decode('utf8'))
-
-#Prova creazione dizionari annidati
-myDict = defaultdict()
-myDict2 = defaultdict()
-myDict2["prova"] = 2
-myDict['home'] = myDict2
-print(myDict["home"]["prova"])
-  # {'home': {'state': 'MN'}}
   
 #Prova caricamento risorse lessicali relative a joy
 with open(os.path.abspath("resources/joy/EmoSN_joy.txt"), 'r', encoding='utf-8') as angerFile:
@@ -126,58 +146,17 @@ NRC_joy_dict = defaultdict()
 sentisense_joy_dict = defaultdict()
 
 for w in EmoSN_joy:
-    EmoSN_joy_dict[w]=0
+    EmoSN_joy_dict[w]=w
 for w in NRC_joy:
-    NRC_joy_dict[w] = 0
+    NRC_joy_dict[w] = w
 for w in sentisense_joy:
-    sentisense_joy_dict[w]=0
-    
-for w in wordsFiltered:
-    if w in EmoSN_joy_dict:
-        EmoSN_joy_dict[w] = EmoSN_joy_dict[w]+1
-    if w in NRC_joy_dict:
-        NRC_joy_dict[w] = NRC_joy_dict[w]+1
-    if w in sentisense_joy_dict:
-        sentisense_joy_dict[w] = sentisense_joy_dict[w]+1
-
-print('lista parole relative a joy trovate in dataset_joy:')
-print('--EmoSN_joy--:')
-for w in EmoSN_joy_dict:
-    if EmoSN_joy_dict[w]>0:
-        print(w + ' : ' + repr(EmoSN_joy_dict[w]))
-print('--NRC_joy--:')
-for w in NRC_joy_dict:
-    if NRC_joy_dict[w]>0:
-        print(w + ' : ' + repr(NRC_joy_dict[w]))
-print('--sentisense_joy--:')
-for w in sentisense_joy_dict:
-    if sentisense_joy_dict[w]>0:
-        print(w + ' : ' + repr(sentisense_joy_dict[w]))
+    sentisense_joy_dict[w]=w
         
 #creazione primo dictionary con chiavi le parole filtrate:
-joy_dict = defaultdict()
-for w in wordsFiltered:
-    sentiment_dict = defaultdict()
-    resources_dict = defaultdict()
-    sentiment_dict['anger'] = resources_dict
-    joy_dict[w] = sentiment_dict
-    if w in EmoSN_joy_dict:
-        resources_dict['EmoSN_joy'] =1
-    else:
-        resources_dict['EmoSN_joy'] =0
-    if w in NRC_joy_dict:
-        resources_dict['RNC_joy'] =1
-    else:
-        resources_dict['RNC_joy'] = 0
-    if w in sentisense_joy_dict:
-        resources_dict['sentisense_joy'] =1
-    else:
-        resources_dict['sentisense_joy'] = 0
+joy_dict = process_joy_resources(wordsFiltered)
 
 print('///////////')
 print('JOY WORDS DICTIONARY:')
 print(joy_dict)
-print('prova')
-print(joy_dict['girll']['anger']['EmoSN_joy'])
 
         
