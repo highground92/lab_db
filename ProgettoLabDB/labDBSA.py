@@ -27,6 +27,7 @@ def text_has_emoji(text):
 #Ritorna un dictionary(nested) con chiavi word:sentiment:resource
 #Il valore "finale" per ogni resource è 1 se la parola è presente nella corrispettiva risorsa lessicale, 0 altrimenti
 #TODO: generalizzare questo processo per tutte le risorse lessicali
+#TODO: gestire le parole "nuove" non presenti nelle risorse lessicali
 def process_joy_resources(filtered_words):
     new_dict = defaultdict()
     for w in wordsFiltered:
@@ -45,9 +46,36 @@ def process_joy_resources(filtered_words):
         if w in sentisense_joy_dict:
             resources_dict['sentisense_joy'] =1
         else:
+            resources_dict['sentisense_joy'] = 0  
+        
+    return new_dict
+
+#prova nuova funzione, aggiorno anche il dict contenente le nuove parole
+def process_joy_resourcesB(filtered_words,new_words_dict):
+    new_dict = defaultdict()
+    for w in wordsFiltered:
+        sentiment_dict = defaultdict()
+        resources_dict = defaultdict()
+        sentiment_dict['joy'] = resources_dict
+        new_dict[w] = sentiment_dict
+        new_word = 1
+        if w in EmoSN_joy_dict:
+            resources_dict['EmoSN_joy'] =1
+            new_word = 0
+        else:
+            resources_dict['EmoSN_joy'] =0
+        if w in NRC_joy_dict:
+            resources_dict['RNC_joy'] =1
+            new_word = 0
+        else:
+            resources_dict['RNC_joy'] = 0
+        if w in sentisense_joy_dict:
+            resources_dict['sentisense_joy'] =1
+            new_word = 0
+        else:
             resources_dict['sentisense_joy'] = 0
-        
-        
+        if (new_word == 1) and (w not in new_words_dict):
+            new_words_dict[w] = w
         
     return new_dict
 
@@ -153,10 +181,14 @@ for w in sentisense_joy:
     sentisense_joy_dict[w]=w
         
 #creazione primo dictionary con chiavi le parole filtrate:
-joy_dict = process_joy_resources(wordsFiltered)
+new_words_dict = defaultdict()
+
+joy_dict = process_joy_resourcesB(wordsFiltered,new_words_dict)
 
 print('///////////')
 print('JOY WORDS DICTIONARY:')
 print(joy_dict)
-
+print('NEW JOY WORDS:')
+print(new_words_dict)
+print('conteggio WORDS:')
         
