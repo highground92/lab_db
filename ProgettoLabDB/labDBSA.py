@@ -6,12 +6,12 @@ from nltk.corpus import stopwords
 from nltk.tokenize import TweetTokenizer
 from collections import defaultdict
 import os
-<<<<<<< HEAD
+#<<<<<<< HEAD
 from resources import emoji_list, punctuation_mark, slang_words, pos
 import re 
 import collections
 
-=======
+
 
 
 # -*- encoding: utf-8 -*-
@@ -86,9 +86,9 @@ def process_joy_resourcesB(filtered_words,new_words_dict):
         
     return new_dict
 
-import emoji_list
+
  
->>>>>>> Fabio
+#>>>>>>> Fabio
 #Leggo il dataSet e lo metto come stringa
 with open(os.path.abspath("dataSet/dataset_joy_piccolo.txt"), 'r', encoding='utf-8') as myfile:
     data=myfile.read().replace('\n', '') 
@@ -106,7 +106,6 @@ deleteWords = ['USERNAME', 'URL']
 wordsFiltered = [h for h in wordsFiltered if h not in deleteWords]
 
 #Processo hashtags.
-hashtags = []
 #Metodo precedente quando ogni elemento era tokenizzato come parola
 """hashSymbol= ['#']
 for index, h in enumerate(list(wordsFiltered)):
@@ -117,11 +116,11 @@ for index, h in enumerate(list(wordsFiltered)):
         wordsFiltered.remove(h)
         wordsFiltered.remove(value)"""
 #for index, h in enumerate(list(wordsFiltered)):
-for h in wordsFiltered:
+"""for h in wordsFiltered:
     if h.startswith("#"):
         #print("H inizia con "+h)            
         hashtags.append(h)
-        wordsFiltered.remove(h)
+        wordsFiltered.remove(h)"""
         
 hashtags=[h for h in wordsFiltered if h.startswith("#")]
 wordsFiltered=[h for h in wordsFiltered if not h.startswith("#")]
@@ -188,10 +187,10 @@ print("DIZIONARIO PAROLE-COUNT: ")
 print(dictionaryWordsCount)    
 #Stampo risultato 
 print("TWEET PULITI: ")    
-<<<<<<< HEAD
+#<<<<<<< HEAD
 print(wordsFiltered)
-=======
-print(wordsFiltered)
+
+
 #print(sentenceFiltered)
 
 #lista delle emoji con nome (es :flushed_face:) e codice utf8
@@ -203,12 +202,12 @@ for w in wordsFiltered:
         #print(w.decode('unicode-escape').encode('latin1').decode('utf8'))
   
 #Prova caricamento risorse lessicali relative a joy
-with open(os.path.abspath("resources/joy/EmoSN_joy.txt"), 'r', encoding='utf-8') as angerFile:
-    EmoSN_joy=angerFile.read().splitlines()
-with open(os.path.abspath("resources/joy/NRC_joy.txt"), 'r', encoding='utf-8') as angerFile:
-    NRC_joy=angerFile.read().splitlines()
-with open(os.path.abspath("resources/joy/sentisense_joy.txt"), 'r', encoding='utf-8') as angerFile:
-    sentisense_joy=angerFile.read().splitlines()
+with open(os.path.abspath("resources/joy/EmoSN_joy.txt"), 'r', encoding='utf-8') as joyFile:
+    EmoSN_joy=joyFile.read().splitlines()
+with open(os.path.abspath("resources/joy/NRC_joy.txt"), 'r', encoding='utf-8') as joyFile:
+    NRC_joy=joyFile.read().splitlines()
+with open(os.path.abspath("resources/joy/sentisense_joy.txt"), 'r', encoding='utf-8') as joyFile:
+    sentisense_joy=joyFile.read().splitlines()
 
 #Creazione dei dictionary delle risorse lessicali joy
 EmoSN_joy_dict = defaultdict()
@@ -234,4 +233,4 @@ print('NEW JOY WORDS:')
 print(new_words_dict)
 print('conteggio WORDS:')
         
->>>>>>> Fabio
+#>>>>>>> Fabio
