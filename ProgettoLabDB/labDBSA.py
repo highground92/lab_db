@@ -5,7 +5,9 @@ from nltk.corpus import stopwords
 from nltk.tokenize import TweetTokenizer
 from collections import defaultdict
 import os
-
+import emoji_list
+import glob
+import json
 
 # -*- encoding: utf-8 -*-
 # pip install emoji
@@ -28,6 +30,8 @@ def text_has_emoji(text):
 #Il valore "finale" per ogni resource è 1 se la parola è presente nella corrispettiva risorsa lessicale, 0 altrimenti
 #TODO: generalizzare questo processo per tutte le risorse lessicali
 #TODO: gestire le parole "nuove" non presenti nelle risorse lessicali
+    
+"""
 def process_joy_resources(filtered_words):
     new_dict = defaultdict()
     for w in wordsFiltered:
@@ -78,11 +82,44 @@ def process_joy_resourcesB(filtered_words,new_words_dict):
             new_words_dict[w] = w
         
     return new_dict
+"""
 
-import emoji_list
+def process_dataSets(filtered_words,lexical_resources):
+    new_dict = defaultdict()
+    for w in wordsFiltered:
+        sentiment_dict = defaultdict()
+        for l in lexical_resources:
+            resources_dict = defaultdict()
+            for res_name in lexical_resources[l]:
+                if w in lexical_resources[l][res_name]:
+                    resources_dict[res_name] = 1
+                else:
+                    resources_dict[res_name] = 0
+            sentiment_dict[l] = resources_dict
+        new_dict[w] = sentiment_dict
+    return new_dict
+    
+
+def search_dir(directory):
+    dirList = next(os.walk(directory))[1]
+    return [h for h in dirList if not h.find("__")!=-1]
+
+def get_lexical_resources():
+    sentiment_list = search_dir('resources')
+    owd = os.getcwd()
+    lexical_dictionary = defaultdict()
+    for dir in sentiment_list:
+        os.chdir(owd+"/resources/"+dir)
+        resources_dictionary = defaultdict()
+        for file in glob.glob("*.txt"):
+            res = open(os.getcwd()+'/'+file, 'r', encoding='utf-8')
+            resources_dictionary[file[:-4]] = res.read().splitlines()
+        lexical_dictionary[dir] = resources_dictionary
+    os.chdir(owd)
+    return lexical_dictionary
  
 #Leggo il dataSet e lo metto come stringa
-with open(os.path.abspath("dataSet/dataset_joy_piccolo.txt"), 'r', encoding='utf-8') as myfile:
+with open(os.path.abspath("dataSet/dataset_dt_joy_60k.txt"), 'r', encoding='utf-8') as myfile:
     data=myfile.read().replace('\n', '') 
 
 #Levo le stopWords, TODO mettere le stopWords della prof, spostare questo piú avanti
@@ -159,36 +196,19 @@ for w in wordsFiltered:
         print(emoji.demojize(w))
         print(w.encode(encoding='utf-8'))
         #print(w.decode('unicode-escape').encode('latin1').decode('utf8'))
-  
-#Prova caricamento risorse lessicali relative a joy
-with open(os.path.abspath("resources/joy/EmoSN_joy.txt"), 'r', encoding='utf-8') as angerFile:
-    EmoSN_joy=angerFile.read().splitlines()
-with open(os.path.abspath("resources/joy/NRC_joy.txt"), 'r', encoding='utf-8') as angerFile:
-    NRC_joy=angerFile.read().splitlines()
-with open(os.path.abspath("resources/joy/sentisense_joy.txt"), 'r', encoding='utf-8') as angerFile:
-    sentisense_joy=angerFile.read().splitlines()
 
-#Creazione dei dictionary delle risorse lessicali joy
-EmoSN_joy_dict = defaultdict()
-NRC_joy_dict = defaultdict()
-sentisense_joy_dict = defaultdict()
+#leggo i nomi dei sentimenti e delle risorse
+lexical_resources = get_lexical_resources()
 
-for w in EmoSN_joy:
-    EmoSN_joy_dict[w]=w
-for w in NRC_joy:
-    NRC_joy_dict[w] = w
-for w in sentisense_joy:
-    sentisense_joy_dict[w]=w
-        
-#creazione primo dictionary con chiavi le parole filtrate:
-new_words_dict = defaultdict()
+words_dict = process_dataSets(wordsFiltered,lexical_resources)
+print('//////////////')
+print('//////////////')
+with open('words_dict.txt', 'w') as file:
+     file.write(json.dumps(words_dict))
+print('LEXICAL RESOURCES:')
+for w in lexical_resources:
+    print('sentiment:' + w)
+    for r in lexical_resources[w]:
+        print(r)
 
-joy_dict = process_joy_resourcesB(wordsFiltered,new_words_dict)
-
-print('///////////')
-print('JOY WORDS DICTIONARY:')
-print(joy_dict)
-print('NEW JOY WORDS:')
-print(new_words_dict)
-print('conteggio WORDS:')
         
