@@ -33,11 +33,15 @@ def process_dataSets(filtered_words,lexical_resources):
         sentiment_dict = defaultdict()
         for l in lexical_resources:
             resources_dict = defaultdict()
+            presence_count = 0
             for res_name in lexical_resources[l]:
                 if w in lexical_resources[l][res_name]:
                     resources_dict[res_name] = 1
+                    presence_count += 1
                 else:
                     resources_dict[res_name] = 0
+            resources_dict['lexical_res_presence'] = presence_count
+            resources_dict['lexical_res_frequency'] = presence_count/len(lexical_resources[l])
             sentiment_dict[l] = resources_dict
         new_dict[w] = sentiment_dict
     return new_dict
