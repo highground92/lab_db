@@ -26,7 +26,6 @@ def get_lexical_resources():
         resources_dictionary = defaultdict()
         for file in glob.glob('*.csv'):
             csv_dict = defaultdict()
-            print('csv: ' + file)
             with open(os.getcwd()+'/'+file, 'r') as f:
                 reader = csv.reader(f,delimiter='\t')
                 for row in reader:
@@ -55,6 +54,5 @@ def get_lexical_resources():
     return lexical_dictionary
 
 new_dictionary = get_lexical_resources()
-print(new_dictionary['neg']['listNegEffTerms'])
 
 
