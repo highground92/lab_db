@@ -15,6 +15,7 @@ cur = con.cursor()
 
 rows = [ ('girll', 0, 0, 0, 2, 0.0) ]
 cur.executemany("insert into anger(word, emosn, nrc, sentisense, frequency_dataset, lexical_res_frequency) values (:1, :2, :3, :4, :5, :6)", rows)
+con.commit()
 
 cur2 = con.cursor()
 cur2.execute("select * from anger")
