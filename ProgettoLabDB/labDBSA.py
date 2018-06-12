@@ -36,7 +36,8 @@ def process_dataSets(filtered_words,lexical_resources):
                 else:
                     resources_dict[res_name] = 0
             resources_dict['lexical_res_presence'] = presence_count
-            resources_dict['lexical_res_frequency'] = presence_count/len(lexical_resources[l])
+            if(len(lexical_resources[l]) != 0) : 
+                resources_dict['lexical_res_frequency'] = presence_count/len(lexical_resources[l])
             sentiment_dict[l] = resources_dict
         new_dict[w] = sentiment_dict
     return new_dict
@@ -83,7 +84,7 @@ def get_lexical_resources():
     return lexical_dictionary
  
 #Leggo il dataSet e lo metto come stringa  TODO:Generalizzare la lettura del file
-with open(os.path.abspath("dataSet/dataset_dt_joy_60k.txt"), 'r', encoding='utf-8') as myfile:
+with open(os.path.abspath("dataSet/datasetPiccolo.txt"), 'r', encoding='utf-8') as myfile:
     data=myfile.read().replace('\n', '') 
 
 #Creazione del file senza stopWords
@@ -136,6 +137,10 @@ wordsFiltered=[h for h in wordsFiltered if h not in pos.tag]
 #Stemming
 ps = PorterStemmer()
 wordsFiltered=[ps.stem(h) for h in wordsFiltered]
+
+#remove number
+wordsFiltered = [h for h in wordsFiltered if not h.isnumeric()]
+print(wordsFiltered)
 
 #Conteggio parole
 dictionaryWordsCount= collections.Counter(wordsFiltered)
