@@ -138,8 +138,8 @@ wordsFiltered=[h for h in wordsFiltered if h not in pos.tag]
 ps = PorterStemmer()
 wordsFiltered=[ps.stem(h) for h in wordsFiltered]
 
-#remove number
-wordsFiltered = [h for h in wordsFiltered if not h.isnumeric()]
+#Rimozione delle "non parole"
+wordsFiltered = [h for h in wordsFiltered if h.isalpha()]
 print(wordsFiltered)
 
 #Conteggio parole

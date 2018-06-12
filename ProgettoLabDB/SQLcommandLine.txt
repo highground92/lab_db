@@ -1,0 +1,13 @@
+per importare la libreria oracle su python -> da terminale pip install cx_Oracle
+
+attivare servizi oracle
+
+aprire Run SQL COMMAND LINE
+
+comando >connect
+
+enter user-name: nome_del_DB
+enter password:
+
+
+sito da cui prendere esempi per codice --> https://oracle.github.io/python-cx_Oracle/
