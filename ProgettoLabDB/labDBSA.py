@@ -7,8 +7,8 @@ from collections import defaultdict
 import os
 import emoji_list
 import glob
-import json
 import csv
+import string
 
 # -*- encoding: utf-8 -*-
 # pip install emoji
@@ -167,12 +167,25 @@ lexical_resources = get_lexical_resources()
 words_dict = process_dataSets(wordsFiltered,lexical_resources)
 print('//////////////')
 print('//////////////')
-with open('words_dict.txt', 'w') as file:
-     file.write(json.dumps(words_dict))
+#with open('words_dict.txt', 'w') as file:
+#     file.write(json.dumps(words_dict))
 print('LEXICAL RESOURCES:')
 for w in lexical_resources:
     print('sentiment:' + w)
     for r in lexical_resources[w]:
         print(r)
 
+
+from pymongo import MongoClient
+
+# Create connection to MongoDB
+client = MongoClient('localhost', 27017)
+db = client['database_di_prova']
+collection = db['words_dict_prova']
+
+# Build a basic dictionary
+
+# Insert the dictionary into Mongo
+collection.insert(words_dict)
+print('done')
         
