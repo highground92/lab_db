@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 from nltk.stem import PorterStemmer 
 from nltk.corpus import stopwords
 from nltk.tokenize import TweetTokenizer
@@ -7,7 +6,6 @@ from collections import defaultdict
 from resources import emoji_list, punctuation_mark, slang_words, pos
 import collections
 import glob
-import json
 import csv
 import emoji
 import os
@@ -21,7 +19,8 @@ def text_has_emoji(text):
             return True
     return False
 
-def process_dataSets(filtered_words,lexical_resources):
+#TODO: gestire le parole "nuove" non presenti nelle risorse lessicali ????????
+def process_dataSets(wordsFiltered,lexical_resources):
     new_dict = defaultdict()
     for w in wordsFiltered:
         sentiment_dict = defaultdict()
@@ -30,12 +29,15 @@ def process_dataSets(filtered_words,lexical_resources):
             presence_count = 0
             for res_name in lexical_resources[l]:
                 if w in lexical_resources[l][res_name]:
-                    resources_dict[res_name] = 1
-                    presence_count += 1
+                    if l == 'con-score':
+                        resources_dict[res_name] = lexical_resources[l][res_name][w]
+                    else:
+                        resources_dict[res_name] = 1
+                        presence_count += 1
                 else:
                     resources_dict[res_name] = 0
             resources_dict['lexical_res_presence'] = presence_count
-            if(len(lexical_resources[l]) != 0) : 
+            if(len(lexical_resources[l])!=0) :
                 resources_dict['lexical_res_frequency'] = presence_count/len(lexical_resources[l])
             sentiment_dict[l] = resources_dict
         new_dict[w] = sentiment_dict
@@ -81,105 +83,109 @@ def get_lexical_resources():
         lexical_dictionary[dir] = resources_dictionary
     os.chdir(owd)
     return lexical_dictionary
- 
-#Leggo il dataSet e lo metto come stringa  TODO:Generalizzare la lettura del file
-with open(os.path.abspath("dataSet/datasetPiccolo.txt"), 'r', encoding='utf-8') as myfile:
-    data=myfile.read().replace('\n', '') 
 
-#Creazione del file senza stopWords
-stopWords = set(stopwords.words('english'))
-words = TweetTokenizer().tokenize(data)
-wordsFiltered = [] 
-for w in words:
-    if w not in stopWords:
-        wordsFiltered.append(w)
+def countCurrency(wordsFiltered) :
+    #Conteggio parole
+    dictionaryWordsCount= collections.Counter(wordsFiltered)
+    return dictionaryWordsCount
 
-#Levo USERNAME e URL
-deleteWords = ['USERNAME', 'URL']
-wordsFiltered = [h for h in wordsFiltered if h not in deleteWords]
+def createDictionary(wordsFiltered):
+    #leggo i nomi dei sentimenti e delle risorse
+    lexical_resources = get_lexical_resources()
+    words_dict = process_dataSets(wordsFiltered,lexical_resources)
+    return words_dict
 
-#Riconosco gli hashtags        
-hashtags=[h for h in wordsFiltered if h.startswith("#")]
-wordsFiltered=[h for h in wordsFiltered if not h.startswith("#")]
-                                                            
-#Emoji       
-countEmoPos=len([h for h in wordsFiltered if h in set(emoji_list.EmojiPos)])
-wordsFiltered=[h for h in wordsFiltered if h not in set(emoji_list.EmojiPos)]
+#Metodo principale di trattamento dei tweets
+def run_clean_tweet(data, parentDir):
+    
+    os.chdir(parentDir)
+    print('Sono in '+os.getcwd())
+    
+    #Creazione del file senza stopWords
+    stopWords = set(stopwords.words('english'))
+    words = TweetTokenizer().tokenize(data)
+    wordsFiltered = [] 
+    for w in words:
+        if w not in stopWords:
+            wordsFiltered.append(w)
 
-countEmoNeg=len([h for h in wordsFiltered if h in set(emoji_list.EmojiNeg)])
-wordsFiltered=[h for h in wordsFiltered if h not in set(emoji_list.EmojiNeg)]
+    #Levo USERNAME e URL
+    deleteWords = ['USERNAME', 'URL']
+    wordsFiltered = [h for h in wordsFiltered if h not in deleteWords]
 
-countEmoNeut=len([h for h in wordsFiltered if h in set(emoji_list.OthersEmoji)])
-wordsFiltered=[h for h in wordsFiltered if h not in set(emoji_list.OthersEmoji)]
+    #Riconosco gli hashtags        
+    hashtags=[h for h in wordsFiltered if h.startswith("#")]
+    wordsFiltered=[h for h in wordsFiltered if not h.startswith("#")]
+                                                                                                                                                                               #Emoji       emoji.UNICODE_EMOJI
+    countEmoPos=len([h for h in wordsFiltered if h in set(emoji_list.EmojiPos)])
+    wordsFiltered=[h for h in wordsFiltered if h not in set(emoji_list.EmojiPos)]
 
-#Emoticons
-countPosEmoticons=len([h for h in wordsFiltered if h in set(emoji_list.posemoticons)])
-wordsFiltered=[h for h in wordsFiltered if h not in set(emoji_list.posemoticons)]
+    countEmoNeg=len([h for h in wordsFiltered if h in set(emoji_list.EmojiNeg)])
+    wordsFiltered=[h for h in wordsFiltered if h not in set(emoji_list.EmojiNeg)]
 
-countNegEmoticons=len([h for h in wordsFiltered if h in set(emoji_list.negemoticons)])
-wordsFiltered=[h for h in wordsFiltered if h not in set(emoji_list.negemoticons)]
+    countEmoNeut=len([h for h in wordsFiltered if h in set(emoji_list.OthersEmoji)])
+    wordsFiltered=[h for h in wordsFiltered if h not in set(emoji_list.OthersEmoji)]
 
-#Punteggiatura
-wordsFiltered=[h for h in wordsFiltered if h not in punctuation_mark.punctuation]
+    #Emoticons
+    countPosEmoticons=len([h for h in wordsFiltered if h in set(emoji_list.posemoticons)])
+    wordsFiltered=[h for h in wordsFiltered if h not in set(emoji_list.posemoticons)]
 
-#Lowercase
-wordsFiltered=[h.lower() for h in wordsFiltered]
+    countNegEmoticons=len([h for h in wordsFiltered if h in set(emoji_list.negemoticons)])
+    wordsFiltered=[h for h in wordsFiltered if h not in set(emoji_list.negemoticons)]
 
-#Slang
-slangWords=[h for h in wordsFiltered if h in slang_words.slang]
-wordsFiltered=[h for h in wordsFiltered if h not in slang_words.slang]
+    #Punteggiatura
+    wordsFiltered=[h for h in wordsFiltered if h not in punctuation_mark.punctuation]
 
-#POS tagging
-posTagging=[h for h in wordsFiltered if h in pos.tag]
-wordsFiltered=[h for h in wordsFiltered if h not in pos.tag]
+    #Lowercase
+    wordsFiltered=[h.lower() for h in wordsFiltered]
+    
+    #Slang
+    slangWords=[h for h in wordsFiltered if h in slang_words.slang]
+    wordsFiltered=[h for h in wordsFiltered if h not in slang_words.slang]
+    
+    #POS tagging
+    posTagging=[h for h in wordsFiltered if h in pos.tag]
+    wordsFiltered=[h for h in wordsFiltered if h not in pos.tag]
+    
+    #Stemming
+    ps = PorterStemmer()
+    wordsFiltered=[ps.stem(h) for h in wordsFiltered]
+    
+    #Rimozione delle non parole
+    wordsFiltered=[h for h in wordsFiltered if h.isalpha()]
+    
+    
+    #print(wordsFiltered)
+    """
+    print("STAMPO VALORI: ")
+    print("countEmoPos: "+repr(countEmoPos))
+    print("countEmoNeg: "+repr(countEmoNeg))
+    print("countEmoNeut: "+repr(countEmoNeut))
+    print("countPosEmoticons: "+repr(countPosEmoticons))
+    print("countNegEmoticons: "+repr(countNegEmoticons))"""
+               
+    """ 
+    print("LISTA HASHTAGS: ")            
+    print(hashtags)    
+    print("LISTA SLANG: ")
+    print(slangWords)
+    print("LISTA POS TAG: ")
+    print(posTagging)
+    print("DIZIONARIO PAROLE-COUNT: ")
+    print(dictionaryWordsCount)    
+    #Stampo risultato 
+    print("TWEET PULITI: ")    
+    print(wordsFiltered)"""
 
-#Stemming
-ps = PorterStemmer()
-wordsFiltered=[ps.stem(h) for h in wordsFiltered]
-
-#Rimozione delle "non parole"
-wordsFiltered = [h for h in wordsFiltered if h.isalpha()]
-
-#Conteggio parole
-dictionaryWordsCount= collections.Counter(wordsFiltered)
-
-"""
-print("STAMPO VALORI: ")
-print("countEmoPos: "+repr(countEmoPos))
-print("countEmoNeg: "+repr(countEmoNeg))
-print("countEmoNeut: "+repr(countEmoNeut))
-print("countPosEmoticons: "+repr(countPosEmoticons))
-print("countNegEmoticons: "+repr(countNegEmoticons))"""
-           
-""" 
-print("LISTA HASHTAGS: ")            
-print(hashtags)    
-print("LISTA SLANG: ")
-print(slangWords)
-print("LISTA POS TAG: ")
-print(posTagging)
-print("DIZIONARIO PAROLE-COUNT: ")
-print(dictionaryWordsCount)    
-#Stampo risultato 
-print("TWEET PULITI: ")    
-print(wordsFiltered)"""
-
-
-#leggo i nomi dei sentimenti e delle risorse
-lexical_resources = get_lexical_resources()
-
-words_dict = process_dataSets(wordsFiltered,lexical_resources)
-
-print('//////////////')
-print('//////////////')
-with open('words_dict.txt', 'w') as file:
-     file.write(json.dumps(words_dict))
-"""     
-print('LEXICAL RESOURCES:')
-for w in lexical_resources:
-    print('sentiment:' + w)
-    for r in lexical_resources[w]:
-        print(r)"""
-
-print(words_dict['girll'])
-        
+    return wordsFiltered
+    """
+    print('//////////////')
+    print('//////////////')# TODO: cambiare il nome del dizionario in base al dataset utilizzato
+    with open('words_dict.txt', 'w') as file:
+         file.write(json.dumps(words_dict)) """
+    """     
+    print('LEXICAL RESOURCES:')
+    for w in lexical_resources:
+        print('sentiment:' + w)
+        for r in lexical_resources[w]:
+            print(r)"""      
