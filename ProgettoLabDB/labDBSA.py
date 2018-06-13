@@ -89,7 +89,7 @@ def get_lexical_resources():
     return lexical_dictionary
  
 #Leggo il dataSet e lo metto come stringa
-with open(os.path.abspath("dataSet/dataset_dt_joy_60k.txt"), 'r', encoding='utf-8') as myfile:
+with open(os.path.abspath("dataSet/dataset_joy_piccolo.txt"), 'r', encoding='utf-8') as myfile:
     data=myfile.read().replace('\n', '') 
 
 #Levo le stopWords, TODO mettere le stopWords della prof, spostare questo piú avanti
@@ -143,7 +143,6 @@ countNegEmoticons=len([h for h in wordsFiltered if h in set(emoji_list.negemotic
 wordsFiltered=[h for h in wordsFiltered if h not in set(emoji_list.negemoticons)]
 
 
-
 print("STAMPO VALORI: ")
 print("countEmoPos: "+repr(countEmoPos))
 print("countEmoNeg: "+repr(countEmoNeg))
@@ -175,7 +174,7 @@ for w in lexical_resources:
     for r in lexical_resources[w]:
         print(r)
 
-
+"""
 from pymongo import MongoClient
 
 # Create connection to MongoDB
@@ -188,4 +187,20 @@ collection = db['words_dict_prova']
 # Insert the dictionary into Mongo
 collection.insert(words_dict)
 print('done')
-        
+"""
+
+import cx_Oracle
+
+con = cx_Oracle.connect('labdb1718/root@127.0.0.1/xe')
+cur = con.cursor()
+for word in words_dict:
+    query = "insert into JOY values ('"+word+"',"+repr(words_dict[word]["joy"]["EmoSN_joy"])+","+repr(words_dict[word]["joy"]["NRC_joy"])+","+repr(words_dict[word]["joy"]["sentisense_joy"])+","+repr(words_dict[word]["joy"]["lexical_res_presence"])+","+repr(words_dict[word]["joy"]["lexical_res_frequency"])+")"
+    print(query)
+    try:
+        cur.execute(query)
+        con.commit()
+    except:
+        print('rollback')
+        con.rollback()
+cur.close()
+con.close()
