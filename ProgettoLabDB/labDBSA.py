@@ -21,7 +21,6 @@ def text_has_emoji(text):
             return True
     return False
 
-#TODO: gestire le parole "nuove" non presenti nelle risorse lessicali ????????
 def process_dataSets(filtered_words,lexical_resources):
     new_dict = defaultdict()
     for w in wordsFiltered:
@@ -140,7 +139,6 @@ wordsFiltered=[ps.stem(h) for h in wordsFiltered]
 
 #Rimozione delle "non parole"
 wordsFiltered = [h for h in wordsFiltered if h.isalpha()]
-print(wordsFiltered)
 
 #Conteggio parole
 dictionaryWordsCount= collections.Counter(wordsFiltered)
@@ -183,4 +181,5 @@ for w in lexical_resources:
     for r in lexical_resources[w]:
         print(r)"""
 
+print(words_dict['girll'])
         

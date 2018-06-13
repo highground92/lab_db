@@ -158,10 +158,10 @@ CREATE TABLE Trust
   CONSTRAINT check_NRC_trust CHECK (NRC BETWEEN 0 and 1)
 );
 
-CREATE TABLE New_Word
+CREATE TABLE NewWord
 (
   word varchar2(20) not null,
-  resource varchar2(20),
+  res varchar2(20),
   frequency number,
-  CONSTRAINT word_pk_trust PRIMARY KEY (word)
+  CONSTRAINT newWord_pk PRIMARY KEY (word)
 );
