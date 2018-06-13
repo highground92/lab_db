@@ -18,6 +18,7 @@ def connessioneOracle(words_dict, wordsFiltered) :
     words_count = labDBSA.countCurrency(wordsFiltered)
     
     for w in words_dict :
+        flag = 0
         for s in words_dict[w] :
             if(words_dict[w][s]['lexical_res_presence'] != 0) :
                 if(s == 'anger') :
@@ -73,10 +74,12 @@ def connessioneOracle(words_dict, wordsFiltered) :
                     cur.executemany("insert into trust (word, nrc, frequency_dataset, lexical_res_frequency) values (:1, :2, :3, :4)",rows)
                     con.commit()
             else :
-                if(s == 'newword') :
-                    rows = [ (''+w, ''+s, words_count[w]) ]
-                    cur.executemany("insert into newword (word, res, frequency) values (:1, :2, :3)",rows)
-                    con.commit()                    
+                if(flag==0) :
+                    rows = [ (''+w, words_count[w]) ]
+                    cur.executemany("insert into newword (word, frequency) values (:1, :2)",rows)
+                    con.commit()
+                    flag=1
+                                        
     cur.close()
     con.close()
     return
