@@ -45,7 +45,8 @@ for file in dataset_list :
             collection.insert_one(mongo_word)
         os.chdir(owd+"/dataSet/")
 #    mongo_words[file[:-4]] = wordsFiltered
-    
+        
+
 """
 client = MongoClient('localhost', 27017)
 db = client['dbTweetProva']
