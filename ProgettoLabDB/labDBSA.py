@@ -3,6 +3,7 @@ from nltk.stem import PorterStemmer
 from nltk.corpus import stopwords
 from nltk.tokenize import TweetTokenizer
 from collections import defaultdict
+import simplejson as json
 from resources import emoji_list, punctuation_mark, slang_words, pos
 import collections
 import glob
@@ -19,8 +20,9 @@ def text_has_emoji(text):
             return True
     return False
 
-#TODO: gestire le parole "nuove" non presenti nelle risorse lessicali ????????
+
 def process_dataSets(wordsFiltered,lexical_resources):
+    print("- Datasets")
     new_dict = defaultdict()
     for w in wordsFiltered:
         sentiment_dict = defaultdict()
@@ -49,6 +51,7 @@ def search_dir(directory):
 
 #Leggo ogni risorsa lessicale presente 
 def get_lexical_resources():
+    print("- Lexical resources")
     sentiment_list = search_dir('resources')
     owd = os.getcwd()
     lexical_dictionary = defaultdict()
@@ -91,8 +94,12 @@ def countCurrency(wordsFiltered) :
 
 def createDictionary(wordsFiltered):
     #leggo i nomi dei sentimenti e delle risorse
+    print("Create dictionary")
     lexical_resources = get_lexical_resources()
     words_dict = process_dataSets(wordsFiltered,lexical_resources)
+    print("Write words_dict.txt")
+    with open('words_dict.txt', 'w') as file:
+         file.write(json.dumps(words_dict))
     return words_dict
 
 #Metodo principale di trattamento dei tweets
@@ -101,6 +108,7 @@ def run_clean_tweet(data, parentDir):
     os.chdir(parentDir)
     print('Sono in '+os.getcwd())
     
+    print("Clean tweet")
     #Creazione del file senza stopWords
     stopWords = set(stopwords.words('english'))
     words = TweetTokenizer().tokenize(data)
@@ -113,10 +121,10 @@ def run_clean_tweet(data, parentDir):
     deleteWords = ['USERNAME', 'URL']
     wordsFiltered = [h for h in wordsFiltered if h not in deleteWords]
 
-    #Riconosco gli hashtags        
+    #Riconosco gli hashtags      
     hashtags=[h for h in wordsFiltered if h.startswith("#")]
     wordsFiltered=[h for h in wordsFiltered if not h.startswith("#")]
-                                                                                                                                                                               #Emoji       emoji.UNICODE_EMOJI
+                                                                                                                                                                            #Emoji       emoji.UNICODE_EMOJI
     countEmoPos=len([h for h in wordsFiltered if h in set(emoji_list.EmojiPos)])
     wordsFiltered=[h for h in wordsFiltered if h not in set(emoji_list.EmojiPos)]
 

@@ -1,167 +1,180 @@
-CREATE TABLE Anger
-(
-  word varchar2(20) not null,
-  EmoSN number(1),
-  NRC number(1),
-  sentisense number(1),
-  frequency number,
-  CONSTRAINT word_pk PRIMARY KEY (word),
-  CONSTRAINT check_EmoSN CHECK (EmoSN BETWEEN 0 and 1),
-  CONSTRAINT check_NRC CHECK (NRC BETWEEN 0 and 1),
-  CONSTRAINT check_sent CHECK (sentisense BETWEEN 0 and 1)
-);
+CREATE TABLE  "ANGER" 
+   (	"DATASET" NVARCHAR2(50),
+	"WORD" NVARCHAR2(50) NOT NULL, 
+	"EMOSN" NUMBER(1,0), 
+	"NRC" NUMBER(1,0), 
+	"SENTISENSE" NUMBER(1,0), 
+	"FREQUENCY_DATASET" NUMBER, 
+	"LEXICAL_RES_FREQUENCY" FLOAT(126), 
+	 CONSTRAINT "CHECK_EMOSN" CHECK (EmoSN BETWEEN 0 and 1), 
+	 CONSTRAINT "CHECK_NRC" CHECK (NRC BETWEEN 0 and 1), 
+	 CONSTRAINT "CHECK_SENT" CHECK (sentisense BETWEEN 0 and 1), 
+	 CONSTRAINT "WORD_PK" PRIMARY KEY ("DATASET", "WORD")
+   ) ;
 
-CREATE TABLE Anticipation
-(
-  word varchar2(20) not null,
-  NRC number(1),
-  sentisense number(1),
-  frequency number,
-  CONSTRAINT word_pk_ant PRIMARY KEY (word),
-  CONSTRAINT check_NRC_ant CHECK (NRC BETWEEN 0 and 1),
-  CONSTRAINT check_sent_ant CHECK (sentisense BETWEEN 0 and 1)
-);
+CREATE TABLE  "ANTICIPATION" 
+   (	"DATASET" NVARCHAR2(50) NOT NULL,
+	"WORD" NVARCHAR2(50) NOT NULL, 
+	"NRC" NUMBER(1,0), 
+	"SENTISENSE" NUMBER(1,0), 
+	"FREQUENCY_DATASET" NUMBER, 
+	"LEXICAL_RES_FREQUENCY" FLOAT(126), 
+	 CONSTRAINT "CHECK_NRC_ANT" CHECK (NRC BETWEEN 0 and 1) , 
+	 CONSTRAINT "CHECK_SENT_ANT" CHECK (sentisense BETWEEN 0 and 1), 
+	 CONSTRAINT "WORD_PK_ANT" PRIMARY KEY ("DATASET", "WORD")
+   ) ;
 
-CREATE TABLE ConScore
-(
-  word varchar2(20) not null,
-  afinn number(1),
-  anewAro float,
-  anewDom float,
-  anewPleas float,
-  dal_activ float,
-  dal_imag float,
-  dal_pleas float,
-  frequency number,
-  CONSTRAINT word_pk_con PRIMARY KEY (word),
-  CONSTRAINT check_afinn CHECK (afinn BETWEEN -5 and 5),
-  CONSTRAINT check_anewAro CHECK (anewAro BETWEEN 1 and 9),
-  CONSTRAINT check_anewDom CHECK (anewDom BETWEEN 1 and 9),
-  CONSTRAINT check_anewPleas CHECK (anewPleas BETWEEN 1 and 9)
-);
+CREATE TABLE  "CONSCORE" 
+   (	"DATASET" NVARCHAR2(50) NOT NULL,
+	"WORD" NVARCHAR2(50) NOT NULL,
+	"AFINN" NUMBER(1,0), 
+	"ANEWARO" FLOAT(126), 
+	"ANEWDOM" FLOAT(126), 
+	"ANEWPLEAS" FLOAT(126), 
+	"DAL_ACTIV" FLOAT(126), 
+	"DAL_IMAG" FLOAT(126), 
+	"DAL_PLEAS" FLOAT(126), 
+	"FREQUENCY_DATASET" NUMBER, 
+	"LEXICAL_RES_FREQUENCY" FLOAT(126), 
+	 CONSTRAINT "CHECK_AFINN" CHECK (afinn BETWEEN -5 and 5), 
+	 CONSTRAINT "CHECK_ANEWARO" CHECK (anewAro BETWEEN 0 and 9), 
+	 CONSTRAINT "CHECK_ANEWDOM" CHECK (anewDom BETWEEN 0 and 9), 
+	 CONSTRAINT "CHECK_ANEWPLEAS" CHECK (anewPleas BETWEEN 0 and 9), 
+	 CONSTRAINT "WORD_PK_ANT" PRIMARY KEY ("DATASET", "WORD")
+   ) ;
 
-CREATE TABLE Disgust_Hate
-(
-  word varchar2(20) not null,
-  NRC number(1),
-  sentisense_disgust number(1),
-  sentisense_hate number(1),
-  frequency number,
-  CONSTRAINT word_pk_disHat PRIMARY KEY (word),
-  CONSTRAINT check_NRC_disHat CHECK (NRC BETWEEN 0 and 1),
-  CONSTRAINT check_sent_dis CHECK (sentisense_disgust BETWEEN 0 and 1),
-  CONSTRAINT check_sent_hat CHECK (sentisense_hate BETWEEN 0 and 1)
-);
+CREATE TABLE  "DISGUST_HATE" 
+   (	"DATASET" NVARCHAR2(50) NOT NULL,
+	"WORD" NVARCHAR2(50) NOT NULL, 
+	"NRC" NUMBER(1,0), 
+	"SENTISENSE_DISGUST" NUMBER(1,0), 
+	"SENTISENSE_HATE" NUMBER(1,0), 
+	"FREQUENCY_DATASET" NUMBER, 
+	"LEXICAL_RES_FREQUENCY" FLOAT(126), 
+	 CONSTRAINT "CHECK_NRC_DISHAT" CHECK (NRC BETWEEN 0 and 1), 
+	 CONSTRAINT "CHECK_SENT_DIS" CHECK (sentisense_disgust BETWEEN 0 and 1), 
+	 CONSTRAINT "CHECK_SENT_HAT" CHECK (sentisense_hate BETWEEN 0 and 1), 
+	 CONSTRAINT "WORD_PK_DISHAT" PRIMARY KEY("DATASET", "WORD")
+   ) ;
 
-CREATE TABLE Fear
-(
-  word varchar2(20) not null,
-  NRC number(1),
-  sentisense number(1),
-  frequency number,
-  CONSTRAINT word_pk_fear PRIMARY KEY (word),
-  CONSTRAINT check_NRC_fear CHECK (NRC BETWEEN 0 and 1),
-  CONSTRAINT check_sent_fear CHECK (sentisense BETWEEN 0 and 1)
-);
+CREATE TABLE  "FEAR" 
+   (	"DATASET" NVARCHAR2(50) NOT NULL,
+	"WORD" NVARCHAR2(50) NOT NULL, 
+	"NRC" NUMBER(1,0), 
+	"SENTISENSE" NUMBER(1,0), 
+	"FREQUENCY_DATASET" NUMBER, 
+	"LEXICAL_RES_FREQUENCY" FLOAT(126), 
+	 CONSTRAINT "CHECK_NRC_FEAR" CHECK (NRC BETWEEN 0 and 1), 
+	 CONSTRAINT "CHECK_SENT_FEAR" CHECK (sentisense BETWEEN 0 and 1), 
+	 CONSTRAINT "WORD_PK_FEAR" PRIMARY KEY("DATASET", "WORD")
+   ) ;
 
-CREATE TABLE Hope
-(
-  word varchar2(20) not null,
-  sentisense number(1),
-  frequency number,
-  CONSTRAINT word_pk_hope PRIMARY KEY (word),
-  CONSTRAINT check_sent_hope CHECK (sentisense BETWEEN 0 and 1)
-);
+CREATE TABLE  "HOPE" 
+   (	"DATASET" NVARCHAR2(50) NOT NULL,
+	"WORD" NVARCHAR2(50) NOT NULL,  
+	"SENTISENSE" NUMBER(1,0), 
+	"FREQUENCY_DATASET" NUMBER, 
+	"LEXICAL_RES_FREQUENCY" FLOAT(126), 
+	 CONSTRAINT "CHECK_SENT_HOPE" CHECK (sentisense BETWEEN 0 and 1), 
+	 CONSTRAINT "WORD_PK_HOPE" PRIMARY KEY ("DATASET", "WORD")
+   ) ;
 
-CREATE TABLE Joy
-(
-  word varchar2(20) not null,
-  EmoSN number(1),
-  NRC number(1),
-  sentisense number(1),
-  frequency number,
-  CONSTRAINT word_pk_joy PRIMARY KEY (word),
-  CONSTRAINT check_EmoSN_joy CHECK (EmoSN BETWEEN 0 and 1),
-  CONSTRAINT check_NRC_joy CHECK (NRC BETWEEN 0 and 1),
-  CONSTRAINT check_sent_joy CHECK (sentisense BETWEEN 0 and 1)
-);
+CREATE TABLE  "JOY" 
+   (	"DATASET" NVARCHAR2(50) NOT NULL,
+	"WORD" NVARCHAR2(50) NOT NULL, 
+	"EMOSN" NUMBER(1,0), 
+	"NRC" NUMBER(1,0), 
+	"SENTISENSE" NUMBER(1,0), 
+	"FREQUENCY_DATASET" NUMBER, 
+	"LEXICAL_RES_FREQUENCY" FLOAT(126), 
+	 CONSTRAINT "CHECK_EMOSN_JOY" CHECK (EmoSN BETWEEN 0 and 1), 
+	 CONSTRAINT "CHECK_NRC_JOY" CHECK (NRC BETWEEN 0 and 1), 
+	 CONSTRAINT "CHECK_SENT_JOY" CHECK (sentisense BETWEEN 0 and 1), 
+	 CONSTRAINT "WORD_PK_JOY" PRIMARY KEY ("DATASET", "WORD")
+   ) ;
 
-CREATE TABLE Like_Love
-(
-  word varchar2(20) not null,
-  sentisense_like number(1),
-  sentisense_love number(1),
-  frequency number,
-  CONSTRAINT word_pk_likelove PRIMARY KEY (word),
-  CONSTRAINT check_sent_like CHECK (sentisense_like BETWEEN 0 and 1),
-  CONSTRAINT check_sent_love CHECK (sentisense_love BETWEEN 0 and 1)
-);
+CREATE TABLE  "LIKE_LOVE" 
+   (	"DATASET" NVARCHAR2(50) NOT NULL,
+	"WORD" NVARCHAR2(50) NOT NULL,
+	"SENTISENSE_LIKE" NUMBER(1,0), 
+	"SENTISENSE_LOVE" NUMBER(1,0), 
+	"FREQUENCY_DATASET" NUMBER, 
+	"LEXICAL_RES_FREQUENCY" FLOAT(126), 
+	 CONSTRAINT "CHECK_SENT_LIKE" CHECK (sentisense_like BETWEEN 0 and 1), 
+	 CONSTRAINT "CHECK_SENT_LOVE" CHECK (sentisense_love BETWEEN 0 and 1), 
+	 CONSTRAINT "WORD_PK_LIKELOVE" PRIMARY KEY ("DATASET", "WORD")
+   ) ;
 
-CREATE TABLE Neg
-(
-  word varchar2(20) not null,
-  GI number(1),
-  HL number(1),
-  listNegEffTerms number(1),
-  LIWC number(1),
-  frequency number,
-  CONSTRAINT word_pk_neg PRIMARY KEY (word),
-  CONSTRAINT check_GI CHECK (GI BETWEEN 0 and 1),
-  CONSTRAINT check_HL CHECK (HL BETWEEN 0 and 1),
-  CONSTRAINT check_listNeg CHECK (listNegEffTerms BETWEEN 0 and 1),
-  CONSTRAINT check_LIWC CHECK (LIWC BETWEEN 0 and 1)
-);
+CREATE TABLE  "NEG" 
+   (	"DATASET" NVARCHAR2(50) NOT NULL,
+	"WORD" NVARCHAR2(50) NOT NULL,
+	"GI" NUMBER(1,0), 
+	"HL" NUMBER(1,0), 
+	"LISTNEGEFFTERMS" NUMBER(1,0), 
+	"LIWC" NUMBER(1,0), 
+	"FREQUENCY_DATASET" NUMBER, 
+	"LEXICAL_RES_FREQUENCY" FLOAT(126), 
+	 CONSTRAINT "CHECK_GI" CHECK (GI BETWEEN 0 and 1), 
+	 CONSTRAINT "CHECK_HL" CHECK (HL BETWEEN 0 and 1), 
+	 CONSTRAINT "CHECK_LISTNEG" CHECK (listNegEffTerms BETWEEN 0 and 1), 
+	 CONSTRAINT "CHECK_LIWC" CHECK (LIWC BETWEEN 0 and 1), 
+	 CONSTRAINT "WORD_PK_NEG" PRIMARY KEY ("DATASET", "WORD")
+   ) ;
 
-CREATE TABLE Pos
-(
-  word varchar2(20) not null,
-  GI number(1),
-  HL number(1),
-  listPosEffTerms number(1),
-  LIWC number(1),
-  frequency number,
-  CONSTRAINT word_pk_pos PRIMARY KEY (word),
-  CONSTRAINT check_GIpos CHECK (GI BETWEEN 0 and 1),
-  CONSTRAINT check_HLpos CHECK (HL BETWEEN 0 and 1),
-  CONSTRAINT check_listpos CHECK (listPosEffTerms BETWEEN 0 and 1),
-  CONSTRAINT check_LIWCpos CHECK (LIWC BETWEEN 0 and 1)
-);
+CREATE TABLE  "NEWWORD" 
+   (	"DATASET" NVARCHAR2(50) NOT NULL,
+	"WORD" NVARCHAR2(50) NOT NULL, 
+	"FREQUENCY" NUMBER, 
+	 CONSTRAINT "NEWWORD_PK" PRIMARY KEY ("DATASET", "WORD")
+   ) ;
 
-CREATE TABLE Sadness
-(
-  word varchar2(20) not null,
-  NRC number(1),
-  sentisense number(1),
-  frequency number,
-  CONSTRAINT word_pk_sad PRIMARY KEY (word),
-  CONSTRAINT check_NRC_sad CHECK (NRC BETWEEN 0 and 1),
-  CONSTRAINT check_sent_sad CHECK (sentisense BETWEEN 0 and 1)
-);
+CREATE TABLE  "POS" 
+   (	"DATASET" NVARCHAR2(50) NOT NULL,
+	"WORD" NVARCHAR2(50) NOT NULL, 
+	"GI" NUMBER(1,0), 
+	"HL" NUMBER(1,0), 
+	"LISTPOSEFFTERMS" NUMBER(1,0), 
+	"LIWC" NUMBER(1,0), 
+	"FREQUENCY_DATASET" NUMBER, 
+	"LEXICAL_RES_FREQUENCY" FLOAT(126), 
+	 CONSTRAINT "CHECK_GIPOS" CHECK (GI BETWEEN 0 and 1), 
+	 CONSTRAINT "CHECK_HLPOS" CHECK (HL BETWEEN 0 and 1), 
+	 CONSTRAINT "CHECK_LISTPOS" CHECK (listPosEffTerms BETWEEN 0 and 1), 
+	 CONSTRAINT "CHECK_LIWCPOS" CHECK (LIWC BETWEEN 0 and 1), 
+	 CONSTRAINT "WORD_PK_POS" PRIMARY KEY ("DATASET", "WORD")
+   ) ;
 
-CREATE TABLE Surprise
-(
-  word varchar2(20) not null,
-  NRC number(1),
-  sentisense number(1),
-  frequency number,
-  CONSTRAINT word_pk_sur PRIMARY KEY (word),
-  CONSTRAINT check_NRC_sur CHECK (NRC BETWEEN 0 and 1),
-  CONSTRAINT check_sent_sur CHECK (sentisense BETWEEN 0 and 1)
-);
+CREATE TABLE  "SADNESS" 
+   (	"DATASET" NVARCHAR2(50) NOT NULL,
+	"WORD" NVARCHAR2(50) NOT NULL,
+	"NRC" NUMBER(1,0), 
+	"SENTISENSE" NUMBER(1,0), 
+	"FREQUENCY_DATASET" NUMBER, 
+	"LEXICAL_RES_FREQUENCY" FLOAT(126), 
+	 CONSTRAINT "CHECK_NRC_SAD" CHECK (NRC BETWEEN 0 and 1), 
+	 CONSTRAINT "CHECK_SENT_SAD" CHECK (sentisense BETWEEN 0 and 1), 
+	 CONSTRAINT "WORD_PK_SAD" PRIMARY KEY ("DATASET", "WORD")
+   ) ;
 
-CREATE TABLE Trust
-(
-  word varchar2(20) not null,
-  NRC number(1),
-  frequency number,
-  CONSTRAINT word_pk_trust PRIMARY KEY (word),
-  CONSTRAINT check_NRC_trust CHECK (NRC BETWEEN 0 and 1)
-);
 
-CREATE TABLE NewWord
-(
-  word varchar2(20) not null,
-  res varchar2(20),
-  frequency number,
-  CONSTRAINT newWord_pk PRIMARY KEY (word)
-);
+CREATE TABLE  "SURPRISE" 
+   (	"DATASET" NVARCHAR2(50) NOT NULL,
+	"WORD" NVARCHAR2(50) NOT NULL,
+	"NRC" NUMBER(1,0), 
+	"SENTISENSE" NUMBER(1,0), 
+	"FREQUENCY_DATASET" NUMBER, 
+	"LEXICAL_RES_FREQUENCY" FLOAT(126), 
+	 CONSTRAINT "CHECK_NRC_SUR" CHECK (NRC BETWEEN 0 and 1), 
+	 CONSTRAINT "CHECK_SENT_SUR" CHECK (sentisense BETWEEN 0 and 1), 
+	 CONSTRAINT "WORD_PK_SUR" PRIMARY KEY ("DATASET", "WORD")
+   ) ;
+
+CREATE TABLE  "TRUST" 
+   (	"DATASET" NVARCHAR2(50) NOT NULL,
+	"WORD" NVARCHAR2(50) NOT NULL, 
+	"NRC" NUMBER(1,0), 
+	"FREQUENCY_DATASET" NUMBER, 
+	"LEXICAL_RES_FREQUENCY" FLOAT(126), 
+	 CONSTRAINT "CHECK_NRC_TRUST" CHECK (NRC BETWEEN 0 and 1), 
+	 CONSTRAINT "WORD_PK_TRUST" PRIMARY KEY ("DATASET", "WORD")
+   ) ;

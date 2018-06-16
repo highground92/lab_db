@@ -3,6 +3,7 @@ import os
 import glob
 import labDBSA
 import oracleDB
+import simplejson as json
 
 def get_all_dataSet():
     owd= os.getcwd()
@@ -22,7 +23,6 @@ for file in dataset_list :
         data=myfile.read().replace('\n', '')
         wordsFiltered = labDBSA.run_clean_tweet(data,parentDir)
         words_dict = labDBSA.createDictionary(wordsFiltered)
+        oracleDB.connessioneOracle(words_dict, wordsFiltered, file)
         owd= os.getcwd()
         os.chdir(owd+"/dataSet/")
-
-oracleDB.connessioneOracle(words_dict, wordsFiltered)    
