@@ -48,7 +48,7 @@ for file in dataset_list :
         wordsFiltered = labDBSA.run_clean_tweet(data,parentDir)
         words_dict = labDBSA.createDictionary(wordsFiltered)
         insert_words_in_mongo(wordsFiltered,0)
-        create_wordsdict(file,words_dict)
+        create_wordsdict(file,words_dict,file)
         wordsCloud.create_word_cloud()
         owd= os.getcwd()        
         os.chdir(owd+"/dataSet/")

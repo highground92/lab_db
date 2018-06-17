@@ -26,13 +26,13 @@ def get_image_sentiment(sentiment,pathPar):
 
 
 #Prendo tutti i file per ogni sentimento
-def create_word_cloud():
+def create_word_cloud(fileName):
     progettoDir=os.getcwd()
     all_words_dict=get_all_words_dict(progettoDir)
-    create_WC(all_words_dict,progettoDir)
+    create_WC(all_words_dict,progettoDir,fileName)
     
 #Per ogni sentimento creo la words cloud
-def create_WC(all_words_dict,progettoDir):
+def create_WC(all_words_dict,progettoDir,fileName):
     
     #pathImage= path.dirname('resources/Image/')
     for h in all_words_dict:
@@ -52,13 +52,16 @@ def create_WC(all_words_dict,progettoDir):
         #Crea il colore dall'immagine
         image_colors = ImageColorGenerator(emoji_colored)
     
-        #Colorazione immagine e stampa
+        #Colorazione immagine e stampa,da commentare
         plt.imshow(wc.recolor(color_func=image_colors), interpolation="bilinear")
-        plt.axis("off")
-        plt.figure()
+        plt.axis("off") 
+        plt.figure() 
+        # fin qui
         
-        wc.to_file("wordSmile"+sentiment+".png")
-
+        os.chdir(progettoDir+"/wordsCloudImg")        
+        wc.to_file(fileName+".png")
+        os.chdir(progettoDir)
+        
 """Per dare ad ogni gruppo di parole un colore specifico (nel caso volessimo metterle tutte assieme)
 https://github.com/amueller/word_cloud/blob/master/examples/colored_by_group.py
 
