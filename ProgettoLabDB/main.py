@@ -22,6 +22,7 @@ def get_all_dataSet():
         dataset_list.append(file)
     return dataset_list
 
+lexical_resources = labDBSA.get_lexical_resources()
 dataset_list=get_all_dataSet()
 owd= os.getcwd()
 parentDir=os.path.abspath(os.path.join(owd, os.pardir))
@@ -30,11 +31,13 @@ client = MongoClient('localhost', 27017)
 db = client['dbTweetProva']
 collection = db['tweet_dict']
 count = 0
+
 for file in dataset_list :    
     with open(file, 'r', encoding='utf-8') as myfile:
         data=myfile.read().replace('\n', '')
         wordsFiltered = labDBSA.run_clean_tweet(data,parentDir)
-        words_dict = labDBSA.createDictionary(wordsFiltered)
+        words_dict = labDBSA.createDictionary(wordsFiltered,lexical_resources)
+        print(words_dict)
         owd= os.getcwd()
         for w in wordsFiltered:
             mongo_word = defaultdict()
@@ -42,10 +45,11 @@ for file in dataset_list :
             mongo_word['_id'] = count
             mongo_word['word'] = w
             count = count+1
-            collection.insert_one(mongo_word)
+            #collection.insert_one(mongo_word)
         os.chdir(owd+"/dataSet/")
 #    mongo_words[file[:-4]] = wordsFiltered
         
+
 
 """
 client = MongoClient('localhost', 27017)

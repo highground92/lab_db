@@ -83,16 +83,32 @@ def get_lexical_resources():
                 resources_dictionary[file[:-4]] = res.read().splitlines()
         lexical_dictionary[dir] = resources_dictionary
     os.chdir(owd)
-    return lexical_dictionary
+    return process_lexical_resources(lexical_dictionary)
+
+def process_lexical_resources(res_dict):
+    resources_dict = res_dict
+    for sentiment in resources_dict:
+        for resource in resources_dict[sentiment]:
+            if sentiment != 'con-score':
+                temp_list = []
+                for word in resources_dict[sentiment][resource]:
+                    if not word.find("_")!=-1:
+                        temp_list.append(word)
+                resources_dict[sentiment][resource] = temp_list
+            else:
+                temp_dict = defaultdict()
+                for word in resources_dict[sentiment][resource]:
+                    if not word.find("_")!=-1:
+                        temp_dict[word] = resources_dict[sentiment][resource][word]
+                resources_dict[sentiment][resource] = temp_dict
+    return resources_dict
 
 def countCurrency(wordsFiltered) :
     #Conteggio parole
     dictionaryWordsCount= collections.Counter(wordsFiltered)
     return dictionaryWordsCount
 
-def createDictionary(wordsFiltered):
-    #leggo i nomi dei sentimenti e delle risorse
-    lexical_resources = get_lexical_resources()
+def createDictionary(wordsFiltered,lexical_resources):
     words_dict = process_dataSets(wordsFiltered,lexical_resources)
     return words_dict
 
