@@ -32,24 +32,34 @@ def open_connection_to_mongo():
     return collection
  
 def create_wordsdict(file,words_dict):             
-    with open('words_dict_'+file[:-4]+'.txt', 'w') as file:
-         file.write(json.dumps(words_dict))
-         
+    with open('words_dict_'+file[:-4]+'.txt', 'w') as file:    
+        file.write(json.dumps(words_dict))
+
+def find_sentiment(file):
+    return file[8:-4]
+
+
+startDir=os.getcwd()
+lexical_resources = labDBSA.get_lexical_resources()
 collection = open_connection_to_mongo()
            
 dataset_list=get_all_dataSet()
 owd= os.getcwd()
 parentDir=os.path.abspath(os.path.join(owd, os.pardir))
 
+
 #Lettura di tutti i dataset, trattamento e caricamento su mongo e Oracle
 for file in dataset_list :    
     with open(file, 'r', encoding='utf-8') as myfile:
         data=myfile.read().replace('\n', '')
         wordsFiltered = labDBSA.run_clean_tweet(data,parentDir)
-        words_dict = labDBSA.createDictionary(wordsFiltered)
-        insert_words_in_mongo(wordsFiltered,0)
-        create_wordsdict(file,words_dict,file)
-        wordsCloud.create_word_cloud()
+        words_dict = labDBSA.createDictionary(wordsFiltered,lexical_resources)
+        #insert_words_in_mongo(wordsFiltered,0)
+        os.chdir("words_dict")
+        create_wordsdict(file,words_dict)
+        os.chdir(startDir)       
+        sentiment=find_sentiment(file)
+        wordsCloud.create_word_cloud(sentiment,wordsFiltered)
         owd= os.getcwd()        
         os.chdir(owd+"/dataSet/")
     

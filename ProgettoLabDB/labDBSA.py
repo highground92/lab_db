@@ -42,13 +42,13 @@ def process_dataSets(wordsFiltered,lexical_resources):
         new_dict[w] = sentiment_dict
     return new_dict
     
-def search_dir(directory):
+def get_all_dir(directory):
     dirList = next(os.walk(directory))[1]
     return [h for h in dirList if not h.find("__")!=-1]
 
 #Leggo ogni risorsa lessicale presente 
 def get_lexical_resources():
-    sentiment_list = search_dir('resources')
+    sentiment_list = get_all_dir('resources')
     owd = os.getcwd()
     lexical_dictionary = defaultdict()
     for dir in sentiment_list:
@@ -87,8 +87,7 @@ def countCurrency(wordsFiltered) :
     dictionaryWordsCount= collections.Counter(wordsFiltered)
     return dictionaryWordsCount
 
-def createDictionary(wordsFiltered):
-    lexical_resources = get_lexical_resources()
+def createDictionary(wordsFiltered,lexical_resources):
     words_dict = process_dataSets(wordsFiltered,lexical_resources)
     return words_dict
 
@@ -96,7 +95,6 @@ def createDictionary(wordsFiltered):
 def run_clean_tweet(data, parentDir):
     
     os.chdir(parentDir)
-    print('Sono in '+os.getcwd())
     
     #Creazione del file senza stopWords
     stopWords = set(stopwords.words('english'))

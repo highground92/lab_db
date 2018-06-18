@@ -5,8 +5,8 @@ from os import path
 from PIL import Image
 import numpy as np
 import matplotlib.pyplot as plt
-
 from wordcloud import WordCloud, ImageColorGenerator
+
 
 def get_all_words_dict(pathPar):
     owd= os.getcwd()
@@ -18,49 +18,59 @@ def get_all_words_dict(pathPar):
 
 def get_image_sentiment(sentiment,pathPar):
     os.chdir(pathPar+"/resources/Image/")
-    image_list=[]
-    for img in glob.glob('*'+sentiment+'*'):
-        image_list.append[img]
-    os.chdir(pathPar+"/words_dict")
-    return image_list
+    """for img in glob.glob('*'+sentiment+'*'):
+        image_list.append(img)"""
+    dirList = next(os.walk(os.getcwd()))[1]
+    return [h for h in dirList if h.find(sentiment)!=-1]
+    #os.chdir(pathPar+"/words_dict")
+    #return image_list
 
+#Trasformo wordsFiltered in testo per la word cloud
+def get_file(wordsFiltered,fileName):
+    f = open(fileName+'.txt', 'w') #Vengono creati bene
+    for w in wordsFiltered:
+        f.write("%s\n" % w) #TODO da controllare come scrive
+    f.close()
+    return f
 
-#Prendo tutti i file per ogni sentimento
-def create_word_cloud(fileName):
-    progettoDir=os.getcwd()
-    all_words_dict=get_all_words_dict(progettoDir)
-    create_WC(all_words_dict,progettoDir,fileName)
+#Creao la word cloud del dataset wordsfiltered
+def create_word_cloud(fileName,wordsFiltered):
+    dirProject=os.getcwd()
+    #all_words_dict=get_all_words_dict(progettoDir)
+    #fileFiltered=get_file(wordsFiltered)
+    #with open('test.txt', 'r') as f: #TODO: PERCHÉ NON SCRIVEEEEEEE?
+    f=get_file(wordsFiltered,fileName)
+    create_WC(f,dirProject,fileName)
     
-#Per ogni sentimento creo la words cloud
-def create_WC(all_words_dict,progettoDir,fileName):
+#Wrapper di create_word_cloud
+def create_WC(fileFiltered,dirProject,fileName):
+    #pathImage= path.dirname(dirProject+"/resources/Image/")
+    #Non funziona il secondo campo del join
+    text=open(path.join(dirProject, 'joy.txt')).read()        #TODO: cambiare joy.txt con uno generale
     
-    #pathImage= path.dirname('resources/Image/')
-    for h in all_words_dict:
-        text = open(h,"r").read()
-    
-        sentiment = h[:-4]
-        
-        for h in get_image_sentiment(sentiment,progettoDir):
-            emoji_colored= np.array(Image.open(h))
-        
-        wc = WordCloud(background_color="white", max_words=2000, mask=emoji_colored,
+    for h in get_image_sentiment(fileName,dirProject):
+        #emoji_colored= np.array(Image.open(h))
+        emoji_colored= np.array(Image.open(path.join(h, fileName+".png")))
+        #emoji_colored = cv2.imread(h)
+        os.chdir(dirProject)
+        wc = WordCloud(background_color="white", max_words=5000, mask=emoji_colored,
                        max_font_size=40, random_state=42)
-    
+
         #Genera la word cloud
         wc.generate(text)
-    
+
         #Crea il colore dall'immagine
         image_colors = ImageColorGenerator(emoji_colored)
     
         #Colorazione immagine e stampa,da commentare
-        plt.imshow(wc.recolor(color_func=image_colors), interpolation="bilinear")
-        plt.axis("off") 
-        plt.figure() 
+        #plt.imshow(wc.recolor(color_func=image_colors), interpolation="bilinear")
+        #plt.axis("off") 
+        #plt.figure() 
         # fin qui
-        
-        os.chdir(progettoDir+"/wordsCloudImg")        
+        wc.recolor(color_func=image_colors)
+        os.chdir(dirProject+"/wordsCloudImg")        
         wc.to_file(fileName+".png")
-        os.chdir(progettoDir)
+        os.chdir(dirProject)
         
 """Per dare ad ogni gruppo di parole un colore specifico (nel caso volessimo metterle tutte assieme)
 https://github.com/amueller/word_cloud/blob/master/examples/colored_by_group.py
