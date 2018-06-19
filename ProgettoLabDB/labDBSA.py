@@ -100,7 +100,6 @@ def createDictionary(wordsFiltered):
 def run_clean_tweet(data, parentDir):
     
     os.chdir(parentDir)
-    print('Sono in '+os.getcwd())
     
     #Creazione del file senza stopWords
     stopWords = set(stopwords.words('english'))

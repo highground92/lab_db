@@ -10,12 +10,12 @@ import os
 import cx_Oracle
 import labDBSA
 
+#gestione caratteri speciali
 os.environ["NLS_LANG"] = ".UTF8"
 
 def connessioneOracle(words_dict, wordsFiltered,dataset) :
     con = cx_Oracle.connect('labDB1718/root@127.0.0.1')
     print("- Save data in DB Oracle for tweet "+dataset)
-    print(con.version)
     cur = con.cursor()
     
     words_count = labDBSA.countCurrency(wordsFiltered)

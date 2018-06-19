@@ -1,14 +1,26 @@
 # -*- coding: utf-8 -*-
-
 from pymongo import MongoClient
+from collections import defaultdict
+from bson.code import Code
 
-# Create connection to MongoDB
-client = MongoClient('localhost', 27017)
-db = client['database_di_prova']
-collection = db['collection_di_prova']
+def connessioneMongo(wordsFiltered, dataset, count) :
+    client = MongoClient('localhost', 27017)
+    db = client['DataSetPiccoli']
+    collection = db['tweets']
+    return collection
 
-# Build a basic dictionary
-#d = {'website': 'www.carrefax.com', 'author': 'Daniel Hoadley', 'colour': 'purple'}
+def caricamentoMongo(wordsFiltered, dataset, count, collection) :
+    for w in wordsFiltered:
+        mongo_word = defaultdict()
+        mongo_word['sentiment'] = dataset[:-4]
+        mongo_word['_id'] = count
+        mongo_word['word'] = w
+        count = count+1
+        collection.insert_one(mongo_word)
+    return count
 
-# Insert the dictionary into Mongo
-#collection.insert(d)
+def mapReduce(collection) :
+    map = Code("function() {emit(this.word+' : '+this.sentiment,1);};")
+    reduce = Code("function(word,count) {return Array.sum(count);};")
+    collection.map_reduce(map, reduce, "words_frequency")
+    return
