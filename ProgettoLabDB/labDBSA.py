@@ -19,7 +19,6 @@ def text_has_emoji(text):
             return True
     return False
 
-#TODO: gestire le parole "nuove" non presenti nelle risorse lessicali ????????
 def process_dataSets(wordsFiltered,lexical_resources):
     print("- Datasets")
     new_dict = defaultdict()
@@ -44,13 +43,13 @@ def process_dataSets(wordsFiltered,lexical_resources):
         new_dict[w] = sentiment_dict
     return new_dict
     
-def search_dir(directory):
+def get_all_dir(directory):
     dirList = next(os.walk(directory))[1]
     return [h for h in dirList if not h.find("__")!=-1]
 
 #Leggo ogni risorsa lessicale presente 
 def get_lexical_resources():
-    sentiment_list = search_dir('resources')
+    sentiment_list = get_all_dir('resources')
     owd = os.getcwd()
     lexical_dictionary = defaultdict()
     for dir in sentiment_list:
@@ -86,13 +85,10 @@ def get_lexical_resources():
     return lexical_dictionary
 
 def countCurrency(wordsFiltered) :
-    #Conteggio parole
     dictionaryWordsCount= collections.Counter(wordsFiltered)
     return dictionaryWordsCount
 
-def createDictionary(wordsFiltered):
-    #leggo i nomi dei sentimenti e delle risorse
-    lexical_resources = get_lexical_resources()
+def createDictionary(wordsFiltered,lexical_resources):
     words_dict = process_dataSets(wordsFiltered,lexical_resources)
     return words_dict
 
@@ -154,7 +150,12 @@ def run_clean_tweet(data, parentDir):
     #Rimozione delle non parole
     wordsFiltered=[h for h in wordsFiltered if h.isalpha()]
     
-    
+    """
+    #Scrivo il file per le words cloud
+    nameFile=''
+    f= open(nameFile,"w+")
+    for item in wordsFiltered:
+        f.write("%s\n" % item)"""
     #print(wordsFiltered)
     """
     print("STAMPO VALORI: ")
@@ -175,17 +176,17 @@ def run_clean_tweet(data, parentDir):
     print(dictionaryWordsCount)    
     #Stampo risultato 
     print("TWEET PULITI: ")    
-    print(wordsFiltered)"""
-
-    return wordsFiltered
+    print(wordsFiltered)
     """
-    print('//////////////')
-    print('//////////////')# TODO: cambiare il nome del dizionario in base al dataset utilizzato
-    with open('words_dict.txt', 'w') as file:
-         file.write(json.dumps(words_dict)) """
-    """     
+    """         
     print('LEXICAL RESOURCES:')
     for w in lexical_resources:
         print('sentiment:' + w)
         for r in lexical_resources[w]:
             print(r)"""      
+    return wordsFiltered
+
+
+
+
+
