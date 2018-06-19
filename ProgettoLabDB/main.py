@@ -4,14 +4,11 @@ import glob
 import labDBSA
 import wordsCloud
 import oracleDB
-<<<<<<< HEAD
 import mongoDB
 
-=======
 import json
 from pymongo import MongoClient
 from collections import defaultdict
->>>>>>> Stefano
 
 def get_all_dataSet():
     owd= os.getcwd()
@@ -51,32 +48,22 @@ collection = open_connection_to_mongo()
 dataset_list=get_all_dataSet()
 owd= os.getcwd()
 parentDir=os.path.abspath(os.path.join(owd, os.pardir))
-<<<<<<< HEAD
 print(parentDir)
 count = 0
 
-=======
-
 
 #Lettura di tutti i dataset, trattamento e caricamento su mongo e Oracle
->>>>>>> Stefano
 for file in dataset_list :    
     with open(file, 'r', encoding='utf-8') as myfile:
         data=myfile.read().replace('\n', '')
         wordsFiltered = labDBSA.run_clean_tweet(data,parentDir)
-<<<<<<< HEAD
-        words_dict = labDBSA.createDictionary(wordsFiltered)
+        words_dict = labDBSA.createDictionary(wordsFiltered,lexical_resources)
         #caricamento su Oracle
         #oracleDB.connessioneOracle(words_dict,wordsFiltered,file)
         #caricamento su Mongo
-        collection = mongoDB.connessioneMongo(wordsFiltered,file,count)
-        count = mongoDB.caricamentoMongo(wordsFiltered,file,count,collection)
-        mongoDB.mapReduce(collection)
-        owd= os.getcwd()
-        os.chdir(owd+"/dataSet/")
-        
-=======
-        words_dict = labDBSA.createDictionary(wordsFiltered,lexical_resources)
+        #collection = mongoDB.connessioneMongo(wordsFiltered,file,count)
+        #count = mongoDB.caricamentoMongo(wordsFiltered,file,count,collection)
+        #mongoDB.mapReduce(collection)
         #insert_words_in_mongo(wordsFiltered,0)
         os.chdir("words_dict")
         create_wordsdict(file,words_dict)
@@ -85,7 +72,4 @@ for file in dataset_list :
         wordsCloud.create_word_cloud(sentiment,wordsFiltered)
         owd= os.getcwd()        
         os.chdir(owd+"/dataSet/")
-    
-
-#oracleDB.connessioneOracle(words_dict, wordsFiltered)    
->>>>>>> Stefano
+          

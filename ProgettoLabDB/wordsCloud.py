@@ -4,7 +4,6 @@ import glob
 from os import path
 from PIL import Image
 import numpy as np
-import matplotlib.pyplot as plt
 from wordcloud import WordCloud, ImageColorGenerator
 
 
@@ -40,13 +39,12 @@ def create_word_cloud(fileName,wordsFiltered):
     #fileFiltered=get_file(wordsFiltered)
     #with open('test.txt', 'r') as f: #TODO: PERCHÉ NON SCRIVEEEEEEE?
     f=get_file(wordsFiltered,fileName)
-    create_WC(f,dirProject,fileName)
+    create_WC(f.name,dirProject,fileName)
     
 #Wrapper di create_word_cloud
 def create_WC(fileFiltered,dirProject,fileName):
     #pathImage= path.dirname(dirProject+"/resources/Image/")
-    #Non funziona il secondo campo del join
-    text=open(path.join(dirProject, 'joy.txt')).read()        #TODO: cambiare joy.txt con uno generale
+    text=open(path.join(dirProject, fileFiltered)).read()
     
     for h in get_image_sentiment(fileName,dirProject):
         #emoji_colored= np.array(Image.open(h))
