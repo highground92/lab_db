@@ -59,12 +59,12 @@ for file in dataset_list :
         wordsFiltered = labDBSA.run_clean_tweet(data,parentDir)
         words_dict = labDBSA.createDictionary(wordsFiltered,lexical_resources)
         #caricamento su Oracle
-        #oracleDB.connessioneOracle(words_dict,wordsFiltered,file)
+        oracleDB.connessioneOracle(words_dict,wordsFiltered,file)
         #caricamento su Mongo
-        #collection = mongoDB.connessioneMongo(wordsFiltered,file,count)
-        #count = mongoDB.caricamentoMongo(wordsFiltered,file,count,collection)
-        #mongoDB.mapReduce(collection)
-        #insert_words_in_mongo(wordsFiltered,0)
+        collection = mongoDB.connessioneMongo(wordsFiltered,file,count)
+        count = mongoDB.caricamentoMongo(wordsFiltered,file,count,collection)
+        mongoDB.mapReduce(collection)
+        insert_words_in_mongo(wordsFiltered,0)
         os.chdir("words_dict")
         create_wordsdict(file,words_dict)
         os.chdir(startDir)       
