@@ -20,6 +20,7 @@ def text_has_emoji(text):
     return False
 
 def process_dataSets(wordsFiltered,lexical_resources):
+    print("- Datasets")
     new_dict = defaultdict()
     for w in wordsFiltered:
         sentiment_dict = defaultdict()
@@ -28,11 +29,11 @@ def process_dataSets(wordsFiltered,lexical_resources):
             presence_count = 0
             for res_name in lexical_resources[l]:
                 if w in lexical_resources[l][res_name]:
+                    presence_count += 1
                     if l == 'con-score':
                         resources_dict[res_name] = lexical_resources[l][res_name][w]
                     else:
                         resources_dict[res_name] = 1
-                        presence_count += 1
                 else:
                     resources_dict[res_name] = 0
             resources_dict['lexical_res_presence'] = presence_count

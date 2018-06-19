@@ -4,6 +4,8 @@ import glob
 import labDBSA
 import wordsCloud
 import oracleDB
+import mongoDB
+
 import json
 from pymongo import MongoClient
 from collections import defaultdict
@@ -46,6 +48,8 @@ collection = open_connection_to_mongo()
 dataset_list=get_all_dataSet()
 owd= os.getcwd()
 parentDir=os.path.abspath(os.path.join(owd, os.pardir))
+print(parentDir)
+count = 0
 
 
 #Lettura di tutti i dataset, trattamento e caricamento su mongo e Oracle
@@ -54,7 +58,13 @@ for file in dataset_list :
         data=myfile.read().replace('\n', '')
         wordsFiltered = labDBSA.run_clean_tweet(data,parentDir)
         words_dict = labDBSA.createDictionary(wordsFiltered,lexical_resources)
-        #insert_words_in_mongo(wordsFiltered,0)
+        #caricamento su Oracle
+        oracleDB.connessioneOracle(words_dict,wordsFiltered,file)
+        #caricamento su Mongo
+        collection = mongoDB.connessioneMongo(wordsFiltered,file,count)
+        count = mongoDB.caricamentoMongo(wordsFiltered,file,count,collection)
+        mongoDB.mapReduce(collection)
+        insert_words_in_mongo(wordsFiltered,0)
         os.chdir("words_dict")
         create_wordsdict(file,words_dict)
         os.chdir(startDir)       
@@ -62,6 +72,4 @@ for file in dataset_list :
         wordsCloud.create_word_cloud(sentiment,wordsFiltered)
         owd= os.getcwd()        
         os.chdir(owd+"/dataSet/")
-    
-
-#oracleDB.connessioneOracle(words_dict, wordsFiltered)    
+          

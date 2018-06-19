@@ -22,40 +22,73 @@ def get_image_sentiment(sentiment,pathPar):
 
 #Trasformo wordsFiltered in testo per la word cloud
 def get_file(wordsFiltered,fileName):
+<<<<<<< HEAD
     with open(fileName+'.txt', 'w+') as modFile:
         for w in wordsFiltered:
             modFile.write(w+"\n")
+=======
+    with open(fileName+'.txt','w+') as modFile:
+        for w in wordsFiltered:
+            modFile.write(w+'\n')
+>>>>>>> Fabio
     return modFile
 
 #Creao la word cloud del dataset wordsfiltered
 def create_word_cloud(fileName,wordsFiltered):
     dirProject=os.getcwd()
+<<<<<<< HEAD
     f=get_file(wordsFiltered,fileName)    
+=======
+    f=get_file(wordsFiltered,fileName)
+>>>>>>> Fabio
     create_WC(f.name,dirProject,fileName)
     
 #Wrapper di create_word_cloud
 def create_WC(fileFiltered,dirProject,fileName):
+<<<<<<< HEAD
 
     text=open(path.join(dirProject, fileFiltered)).read()        
+=======
+    text=open(path.join(dirProject, fileFiltered)).read()
+>>>>>>> Fabio
     
     for h in get_image_sentiment(fileName,dirProject):
         emoji_colored= np.array(Image.open(path.join(h, fileName+".png")))
         os.chdir(dirProject)
         wc = WordCloud(background_color="white", max_words=5000, mask=emoji_colored,
+<<<<<<< HEAD
                        max_font_size=40, random_state=42,contour_width=1,contour_color='gray')
+=======
+                       max_font_size=40, random_state=42, contour_width=1, contour_color='gray')
+>>>>>>> Fabio
 
         #Genera la word cloud
         wc.generate(text)
 
         #Crea il colore dall'immagine
         image_colors = ImageColorGenerator(emoji_colored)
+<<<<<<< HEAD
         """
+=======
+        
+        """"
+>>>>>>> Fabio
         #Colorazione immagine e stampa,da commentare
         #plt.imshow(wc.recolor(color_func=image_colors), interpolation="bilinear")
         #plt.axis("off") 
         #plt.figure() 
+<<<<<<< HEAD
         """
+=======
+        # fin qui
+        """
+        
+>>>>>>> Fabio
         wc.recolor(color_func=image_colors)
         os.chdir(dirProject+"/wordsCloudImg")        
         wc.to_file(fileName+".png")
         os.chdir(dirProject)
+<<<<<<< HEAD
+=======
+        
+>>>>>>> Fabio
