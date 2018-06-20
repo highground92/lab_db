@@ -1,11 +1,5 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Mon Jun 11 14:19:48 2018
 
-@author: Giulia
-"""
-
-""" CONNESSIONE AL DB ORACLE """
 import os
 import cx_Oracle
 import labDBSA
