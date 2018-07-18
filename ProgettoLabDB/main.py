@@ -5,10 +5,7 @@ import labDBSA
 import wordsCloud
 import oracleDB
 import mongoDB
-
-import json
 from pymongo import MongoClient
-from collections import defaultdict
 
 def get_all_dataSet():
     owd= os.getcwd()
@@ -18,38 +15,23 @@ def get_all_dataSet():
         dataset_list.append(file)
     return dataset_list
 
-def insert_words_in_mongo(wordsFiltered,count):
-    for w in wordsFiltered:
-        mongo_word = defaultdict()
-        mongo_word['sentiment'] = file[:-4]
-        mongo_word['_id'] = count
-        mongo_word['word'] = w
-        count = count+1
-        collection.insert_one(mongo_word)
-
 def open_connection_to_mongo():
     client = MongoClient('localhost', 27017)
-    db = client['dbTweetProva']
+    db = client['dbTweet']
     collection = db['tweet_dict']
     return collection
- 
-def create_wordsdict(file,words_dict):             
-    with open('words_dict_'+file[:-4]+'.txt', 'w') as file:    
-        file.write(json.dumps(words_dict))
 
 def find_sentiment(file):
     return file[8:-4]
 
-
+count = 0
 startDir=os.getcwd()
 lexical_resources = labDBSA.get_lexical_resources()
 collection = open_connection_to_mongo()
-           
+        
 dataset_list=get_all_dataSet()
 owd= os.getcwd()
 parentDir=os.path.abspath(os.path.join(owd, os.pardir))
-print(parentDir)
-count = 0
 
 
 #Lettura di tutti i dataset, trattamento e caricamento su mongo e Oracle
@@ -61,15 +43,10 @@ for file in dataset_list :
         #caricamento su Oracle
         oracleDB.connessioneOracle(words_dict,wordsFiltered,file)
         #caricamento su Mongo
-        collection = mongoDB.connessioneMongo(wordsFiltered,file,count)
         count = mongoDB.caricamentoMongo(wordsFiltered,file,count,collection)
-        mongoDB.mapReduce(collection)
-        insert_words_in_mongo(wordsFiltered,0)
-        os.chdir("words_dict")
-        create_wordsdict(file,words_dict)
         os.chdir(startDir)       
         sentiment=find_sentiment(file)
         wordsCloud.create_word_cloud(sentiment,wordsFiltered)
-        owd= os.getcwd()        
-        os.chdir(owd+"/dataSet/")
-          
+        os.chdir("/Users/stevi/.spyder-py3/ProgettoLabDB/dataSet/")
+
+mongoDB.mapReduce(collection)

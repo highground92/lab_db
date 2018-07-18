@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
-from nltk.stem import PorterStemmer 
-from nltk.corpus import stopwords
-from nltk.tokenize import TweetTokenizer
-from collections import defaultdict
-from resources import emoji_list, punctuation_mark, slang_words, pos
 import collections
 import glob
 import csv
 import emoji
 import os
+from nltk.stem import PorterStemmer 
+from nltk.corpus import stopwords
+from nltk.tokenize import TweetTokenizer
+from collections import defaultdict
+from resources import emoji_list, punctuation_mark, slang_words, pos
 
 def char_is_emoji(character):
     return character in emoji.UNICODE_EMOJI
@@ -20,7 +20,6 @@ def text_has_emoji(text):
     return False
 
 def process_dataSets(wordsFiltered,lexical_resources):
-    print("- Datasets")
     new_dict = defaultdict()
     for w in wordsFiltered:
         sentiment_dict = defaultdict()
@@ -138,11 +137,7 @@ def run_clean_tweet(data, parentDir):
     #Slang
     slangWords=[h for h in wordsFiltered if h in slang_words.slang]
     wordsFiltered=[h for h in wordsFiltered if h not in slang_words.slang]
-    
-    #POS tagging
-    posTagging=[h for h in wordsFiltered if h in pos.tag]
-    wordsFiltered=[h for h in wordsFiltered if h not in pos.tag]
-    
+
     #Stemming
     ps = PorterStemmer()
     wordsFiltered=[ps.stem(h) for h in wordsFiltered]
@@ -150,12 +145,6 @@ def run_clean_tweet(data, parentDir):
     #Rimozione delle non parole
     wordsFiltered=[h for h in wordsFiltered if h.isalpha()]
     
-    """
-    #Scrivo il file per le words cloud
-    nameFile=''
-    f= open(nameFile,"w+")
-    for item in wordsFiltered:
-        f.write("%s\n" % item)"""
     #print(wordsFiltered)
     """
     print("STAMPO VALORI: ")
