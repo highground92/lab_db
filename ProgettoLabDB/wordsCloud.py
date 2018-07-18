@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 import os
 import glob
+import numpy as np
 from os import path
 from PIL import Image
-import numpy as np
 from wordcloud import WordCloud, ImageColorGenerator
 
 
@@ -22,9 +22,9 @@ def get_image_sentiment(sentiment,pathPar):
 
 #Trasformo wordsFiltered in testo per la word cloud
 def get_file(wordsFiltered,fileName):
-    with open(fileName+'.txt','w+') as modFile:
+    with open(fileName+'.txt', 'w+') as modFile:
         for w in wordsFiltered:
-            modFile.write(w+'\n')
+            modFile.write(w+"\n")
     return modFile
 
 #Creao la word cloud del dataset wordsfiltered
@@ -35,6 +35,7 @@ def create_word_cloud(fileName,wordsFiltered):
     
 #Wrapper di create_word_cloud
 def create_WC(fileFiltered,dirProject,fileName):
+
     text=open(path.join(dirProject, fileFiltered)).read()
     
     for h in get_image_sentiment(fileName,dirProject):
@@ -48,7 +49,7 @@ def create_WC(fileFiltered,dirProject,fileName):
 
         #Crea il colore dall'immagine
         image_colors = ImageColorGenerator(emoji_colored)
-        
+       
         """"
         #Colorazione immagine e stampa,da commentare
         #plt.imshow(wc.recolor(color_func=image_colors), interpolation="bilinear")
@@ -61,4 +62,3 @@ def create_WC(fileFiltered,dirProject,fileName):
         os.chdir(dirProject+"/wordsCloudImg")        
         wc.to_file(fileName+".png")
         os.chdir(dirProject)
-        
